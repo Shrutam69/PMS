@@ -42,6 +42,10 @@ namespace ProjectManagementWebApiCore.Models
             {
                 entity.ToTable("tblEmployee");
 
+                entity.HasIndex(e => e.Code)
+                    .HasName("UQ__tblEmplo__A25C5AA7F5C93DEE")
+                    .IsUnique();
+
                 entity.Property(e => e.Code)
                     .IsRequired()
                     .HasMaxLength(10);
@@ -60,19 +64,23 @@ namespace ProjectManagementWebApiCore.Models
                 entity.ToTable("tblEmployeeSkill");
 
                 entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.TblEmployeeSkillEmployee)
+                    .WithMany(p => p.TblEmployeeSkill)
                     .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__tblEmploy__Emplo__182C9B23");
+                    .HasConstraintName("FK__tblEmploy__Emplo__59FA5E80");
 
                 entity.HasOne(d => d.Skill)
-                    .WithMany(p => p.TblEmployeeSkillSkill)
+                    .WithMany(p => p.TblEmployeeSkill)
                     .HasForeignKey(d => d.SkillId)
-                    .HasConstraintName("FK__tblEmploy__Skill__1920BF5C");
+                    .HasConstraintName("FK__tblEmploy__Skill__5AEE82B9");
             });
 
             modelBuilder.Entity<TblProject>(entity =>
             {
                 entity.ToTable("tblProject");
+
+                entity.HasIndex(e => e.Code)
+                    .HasName("UQ__tblProje__A25C5AA78CC68835")
+                    .IsUnique();
 
                 entity.Property(e => e.Code)
                     .IsRequired()
@@ -91,15 +99,15 @@ namespace ProjectManagementWebApiCore.Models
             {
                 entity.ToTable("tblProjectTech");
 
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.TblProjectTechEmployee)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__tblProjec__Emplo__1BFD2C07");
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.TblProjectTech)
+                    .HasForeignKey(d => d.ProjectId)
+                    .HasConstraintName("FK__tblProjec__Proje__5CD6CB2B");
 
                 entity.HasOne(d => d.Skill)
-                    .WithMany(p => p.TblProjectTechSkill)
+                    .WithMany(p => p.TblProjectTech)
                     .HasForeignKey(d => d.SkillId)
-                    .HasConstraintName("FK__tblProjec__Skill__1CF15040");
+                    .HasConstraintName("FK__tblProjec__Skill__5DCAEF64");
             });
 
             modelBuilder.Entity<TblSkillsMaster>(entity =>
