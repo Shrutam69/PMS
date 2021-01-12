@@ -1,0 +1,63 @@
+th {
+  background-color: #001529 !important;
+  color: white !important;
+  width: 23%;
+  font-size: 18px;
+}
+input :focus {
+  outline: none;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(180, 180, 180, 0.6);
+}
+
+.field {
+  width: 100%;
+  height: 36px;
+  outline: none;
+  border: 1px solid #dddddd;
+}
+
+.btn-save {
+  background-color: #208fc8 !important;
+  border-radius: 0px !important;
+  height: 34px;
+}
+.btn-cancel {
+  background-color: #e1e1e1 !important;
+  border-radius: 0px !important;
+  height: 34px;
+  color: black !important;
+}
+.err-field {
+  width: 100%;
+  height: 34px;
+  outline: none;
+  border: 1px solid red;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.searchBox {
+  width: 100%;
+  height: 34px;
+  outline: none;
+  border: 1px solid #dddddd;
+}
+
+._2iA8p44d0WZ-WqRBGcAuEV {
+  width: 100%;
+  /* height: 34px; */
+  border-radius: 0px !important;
+  padding: 1px 4px !important;
+  outline: none;
+  border: 1px solid #dddddd !important;
+}
+._3vt7_Mh4hRCFbp__dFqBCI input {
+  margin-top: 0px !important;
+}

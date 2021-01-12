@@ -175,10 +175,11 @@ namespace ProjectManagementWebApiCore.Controllers
 
         // PUT: api/Employees/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, ManageEmployee manageEmployee ,[FromForm]TblEmployee tblEmployee)
+        public async Task<IActionResult> PutEmployee(int id, ManageEmployee manageEmployee)
         {
             var empId = id;
             var initialId = 0;
+            var tblEmployee = await _context.TblEmployee.FindAsync(id);
             if (id != empId)
             {
                 return BadRequest();
@@ -230,16 +231,16 @@ namespace ProjectManagementWebApiCore.Controllers
             return NoContent();
         }
 
-
         // DELETE: api/Employees/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<TblEmployee>> DeleteManageEmployee(int id)
         {
-            _context.TblEmployeeSkill.RemoveRange(_context.TblEmployeeSkill.Where(a => a.EmployeeId == id));
-            _context.SaveChanges();
-            _context.TblAssign.RemoveRange(_context.TblAssign.Where(a => a.EmployeeId == id));
-            _context.SaveChanges();
             var tblEmployee = await _context.TblEmployee.FindAsync(id);
+            var data = _context.TblEmployeeSkill.Where(a => a.EmployeeId == id).ToList();
+             _context.TblEmployeeSkill.RemoveRange(data);
+             _context.SaveChanges();
+             _context.TblAssign.RemoveRange(_context.TblAssign.Where(a => a.EmployeeId == id));
+             _context.SaveChanges();
             if (tblEmployee == null)
             {
                 return NotFound();
