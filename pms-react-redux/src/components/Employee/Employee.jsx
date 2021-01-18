@@ -8,7 +8,7 @@ import {
   TextField,
   InputAdornment,
 } from '@material-ui/core';
-import { tableHeaders } from '../../utils/constatnts';
+import { tableHeaders } from '../../utils/data';
 import * as actions from '../../actions/employee';
 import { UserAddOutlined } from '@ant-design/icons';
 import EditIcon from '@material-ui/icons/Edit';
@@ -22,8 +22,12 @@ import { useToasts } from 'react-toast-notifications';
 
 const Employee = () => {
   const { addToast } = useToasts();
-  const [employee, setEmployee] = useState([]);
+  // const [employee, setEmployee] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
+  const [recordForEdit, setRecordForEdit] = useState(null);
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
+  const inputChange = true;
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
     title: '',
@@ -32,16 +36,28 @@ const Employee = () => {
   const employeeState = useSelector((state) => state.employeeReducer.list);
   const dispatch = useDispatch();
   const getEmployeeList = () => {
-    dispatch(actions.fetchAll());
+    const list = dispatch(actions.fetchAll());
   };
   useEffect(() => {
     getEmployeeList();
+  }, [employeeState]);
+  useEffect(() => {
+    debugger;
+    setSearchResult(...employeeState);
   }, []);
-  const openInPopup = (item) => {
-    //  setRecordForEdit(item);
-    setOpenPopup(true);
-  };
-
+  // const [employee, setEmployee] = useState([employeeState]);
+  // useEffect(() => {
+  //   let dataAfterFilter = inputChange
+  //     ? employeeState.filter((x) =>
+  //         x.name.toLowerCase().includes(searchInput.toLowerCase())
+  //       )
+  //     : '';
+  //   setSearchResult(dataAfterFilter);
+  // }, [searchInput]);
+  // const openInPopup = (item) => {
+  //   setRecordForEdit(item);
+  //   setOpenPopup(true);
+  // };
   const onDelete = (id) => {
     setConfirmDialog({
       ...confirmDialog,
@@ -62,13 +78,16 @@ const Employee = () => {
       <ButtonGroup variant="text">
         <Button
           onClick={() => {
-            openInPopup(employee);
+            console.log(employee);
+            setOpenPopup(true);
+            // setRecordForEdit(employee);
           }}
         >
           <EditIcon color="primary" />
         </Button>
         <Button
           onClick={() => {
+            debugger;
             setConfirmDialog({
               isOpen: true,
               title: 'Are you sure to delete employee?',
@@ -101,7 +120,7 @@ const Employee = () => {
             }}
             onClick={() => {
               setOpenPopup(true);
-              // setRecordForEdit(null);
+              setRecordForEdit(null);
             }}
           >
             <UserAddOutlined
@@ -129,7 +148,7 @@ const Employee = () => {
                   ),
                 }}
                 onChange={(e) => {
-                  // setSearchInput(e.target.value);
+                  setSearchInput(e.target.value);
                 }}
               />
             </Toolbar>
@@ -138,7 +157,6 @@ const Employee = () => {
       </div>
       <div className="border">
         <Table
-          key={employeeState.Id}
           columns={columns}
           dataSource={employeeState}
           pagination={{
@@ -156,8 +174,8 @@ const Employee = () => {
         setOpenPopup={setOpenPopup}
       >
         <EmployeeForm
-          //  recordForEdit={recordForEdit} addOrEdit={addOrEdit}
-          openPopup={openPopup}
+          recordForEdit={recordForEdit}
+          // openPopup={openPopup}
           setOpenPopup={setOpenPopup}
         />
       </Popup>

@@ -9,46 +9,49 @@ import './employee.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Multiselect } from 'multiselect-react-dropdown';
+import * as actions from '../../actions/employee';
+import * as skillsactions from '../../actions/skills';
+import { useSelector, useDispatch } from 'react-redux';
+import Select from 'react-select';
+import { options } from '../../utils/data';
+import { useToasts } from 'react-toast-notifications';
 
 const EmployeeForm = (props) => {
+  const { addToast } = useToasts();
   const { addOrEdit, recordForEdit, openPopup, setOpenPopup } = props;
+  const skillsState = useSelector((state) => state.skillsReducer.list);
+  const dispatch = useDispatch();
+  const getSkillsList = () => {
+    dispatch(skillsactions.fetchAll());
+  };
+  useEffect(() => {
+    getSkillsList();
+  }, []);
+
   const initialFieldValues = {
     id: 0,
     name: '',
     code: '',
-    startDate: '',
-    releaseDate: '',
-    userType: '',
-    userTypeId: [],
+    startDate: new Date(),
+    releaseDate: new Date(),
+    SelectedSkillList: [],
   };
-  const plainArray = [
-    'Option 1',
-    'Option 2',
-    'Option 3',
-    'Option 4',
-    'Option 5',
-  ];
+
   const [values, setValues] = useState(initialFieldValues);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState();
-  const [siklls, setsiklls] = useState(plainArray);
+  const [skills, setSkills] = useState([]);
   //Validation
   const validationSchema = Yup.object({
     name: Yup.string()
       .trim()
       .required('This field is required')
-      .matches()
       .min(3, 'Mininum 3 characters allowed')
       .max(15, 'Maximum 15 characters allowed'),
-    code: Yup.string()
-      .trim()
-      .email('Invalid email format')
-      .required('This field is required'),
-    userType: Yup.string().required('Please select one option'),
-    startDate: Yup.string().required('This field is required'),
-    releaseDate: Yup.string().required('This field is required'),
+    code: Yup.string().trim().required('This field is required'),
+    // startDate: Yup.string().required('This field is required'),
+    // releaseDate: Yup.string().required('This field is required'),
   });
   useEffect(() => {
+    debugger;
     if (recordForEdit != null)
       setValues({
         ...recordForEdit,
@@ -66,9 +69,35 @@ const EmployeeForm = (props) => {
       [name]: value,
     });
   };
+  const onSelect = (data) => {
+    debugger;
+    let newdata = data?.map((test) => {
+      return test.value;
+    });
+    setValues({
+      ...values,
+      SelectedSkillList: newdata,
+    });
+  };
 
+  const onRemove = (data) => {
+    setValues({
+      ...values,
+      SelectedSkillList: data,
+    });
+  };
   //Submit Event
-  const onSubmit = (values) => {};
+  const onSubmit = (values) => {
+    debugger;
+    console.log('values', values);
+    dispatch(
+      actions.create(
+        values,
+        addToast('Employee Added Successfully', { appearance: 'success' })
+      )
+    );
+    setOpenPopup(false);
+  };
   return (
     <div>
       <div className="p-2">
@@ -79,7 +108,7 @@ const EmployeeForm = (props) => {
             onSubmit={onSubmit}
             enableReinitialize
           >
-            {({ errors, touched }) => {
+            {({ errors, touched, setFieldValue, values }) => {
               return (
                 <Form autoComplete="off" noValidate>
                   <div className="row">
@@ -99,7 +128,7 @@ const EmployeeForm = (props) => {
                         onKeyDown={(e) =>
                           e.keyCode > 48 && e.keyCode < 57 && e.preventDefault()
                         }
-                        value={values.firstName}
+                        value={values.name}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -116,43 +145,10 @@ const EmployeeForm = (props) => {
                         type="text"
                         name="code"
                         className={
-                          errors.name && touched.name ? 'err-field' : 'field'
+                          errors.code && touched.code ? 'err-field' : 'field'
                         }
                         value={values.code}
                         onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="row mt-3">
-                    <div className="col-sm-3 d-flex justify-content-sm-start justify-content-md-end pt-1 pr-0">
-                      <label>
-                        Start Date<span className="text-danger">*</span>
-                      </label>
-                    </div>
-                    <div className="col-sm-9">
-                      <DatePicker
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        isClearable
-                        placeholderText=" select date!"
-                        className="field"
-                        style={{ width: '100%' }}
-                      />
-                    </div>
-                  </div>
-                  <div className="row mt-3">
-                    <div className="col-sm-3 d-flex justify-content-sm-start justify-content-md-end pt-1 pr-0">
-                      <label>
-                        End Date<span className="text-danger">*</span>
-                      </label>
-                    </div>
-                    <div className="col-sm-9">
-                      <DatePicker
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        isClearable
-                        placeholderText=" select date!"
-                        className="field"
                       />
                     </div>
                   </div>
@@ -163,9 +159,61 @@ const EmployeeForm = (props) => {
                       </label>
                     </div>
                     <div className="col-sm-9">
-                      <Multiselect options={plainArray} isObject={false} />
+                      <Select
+                        isMulti
+                        name="SelectedSkillList"
+                        options={options}
+                        className="basic-multi-select"
+                        // className={
+                        //   errors.code && touched.code
+                        //     ? 'err-field basic-multi-select'
+                        //     : 'field basic-multi-select'
+                        // }
+                        classNamePrefix="select"
+                        // onSelect={onSelect}
+                        onRemove={onRemove}
+                        onChange={onSelect}
+                        // value={values.SelectedSkillList}
+                      />
                     </div>
                   </div>
+                  <div className="row mt-3">
+                    <div className="col-sm-3 d-flex justify-content-sm-start justify-content-md-end pt-1 pr-0">
+                      <label>Start Date</label>
+                    </div>
+                    <div className="col-sm-9">
+                      <FormikControl
+                        control="date"
+                        name="startDate"
+                        className={
+                          errors.startDate && touched.startDate
+                            ? 'err-field'
+                            : 'field'
+                        }
+                        value={values.startDate}
+                        // onChange={(date) => setStartDate(date)}
+                      />
+                    </div>
+                  </div>
+                  <div className="row mt-3">
+                    <div className="col-sm-3 d-flex justify-content-sm-start justify-content-md-end pt-1 pr-0">
+                      <label>Release Date</label>
+                    </div>
+                    <div className="col-sm-9">
+                      <FormikControl
+                        control="date"
+                        name="releaseDate"
+                        className={
+                          errors.startDate && touched.startDate
+                            ? 'err-field'
+                            : 'field'
+                        }
+                        value={values.releaseDate}
+                        // onChange={(date) => setReleaseDate(date)}
+                      />
+                    </div>
+                  </div>
+
                   <div className="d-flex justify-content-end mt-3">
                     <Button
                       variant="contained"

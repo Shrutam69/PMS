@@ -5,7 +5,7 @@ const initialState = {
 
 export const projectReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ACTION_TYPES.FETCH_ALL_PRODUCT:
+    case ACTION_TYPES.FETCH_ALL_PROJECT:
       return {
         ...state,
         list: [...action.payload],
@@ -19,13 +19,13 @@ export const projectReducer = (state = initialState, action) => {
       return {
         ...state,
         list: state.list.map((x) =>
-          x.productId === action.payload.id ? action.payload : x
+          x.Id === action.payload.id ? action.payload : x
         ),
       };
     case ACTION_TYPES.DELETE_PRODUCT:
       return {
         ...state,
-        list: state.list.filter((x) => x.productId !== action.payload),
+        list: state.list.filter((x) => x.Id !== action.payload),
       };
 
     default:

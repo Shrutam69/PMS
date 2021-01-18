@@ -12,7 +12,7 @@ export default function Popup(props) {
       <div className="pr-0 pl-3 py-3">
         <div className="d-flex justify-content-between">
           <div style={{ fontSize: '24px' }}>
-            <strong>Employee Form</strong>
+            <strong>{title}</strong>
           </div>
           <Button
             onClick={() => {
