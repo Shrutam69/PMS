@@ -6,7 +6,6 @@ import { Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import './employee.css';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Multiselect } from 'multiselect-react-dropdown';
 import * as actions from '../../actions/employee';
@@ -27,16 +26,16 @@ const EmployeeForm = (props) => {
   } = props;
   const skillsState = useSelector((state) => state.skillsReducer.list);
   const dispatch = useDispatch();
-  const getSkillsList = () => {
-    dispatch(skillsactions.fetchAll());
-  };
-  useEffect(() => {
-    getSkillsList();
-  }, []);
-  const employeeState = useSelector((state) => state.employeeReducer.list);
-  const getEmployeeList = () => {
-    dispatch(actions.fetchAll());
-  };
+  // const getSkillsList = () => {
+  //   dispatch(skillsactions.fetchAll());
+  // };
+  // useEffect(() => {
+  //   getSkillsList();
+  // }, []);
+  const [data, setData] = useState([recordForEdit]);
+  // useEffect(() => {
+  //   getEmployeeList();
+  // }, [employeeState]);
   const initialFieldValues = {
     id: 0,
     name: '',
@@ -45,8 +44,9 @@ const EmployeeForm = (props) => {
     releaseDate: new Date(),
     SelectedSkillList: [],
   };
-
-  const [values, setValues] = useState(initialFieldValues);
+  const [values, setValues] = useState(
+    recordForEdit ? recordForEdit : initialFieldValues
+  );
   //Validation
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -56,21 +56,14 @@ const EmployeeForm = (props) => {
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
   });
-  // useEffect(() => {
-  //   debugger;
-  //   if (recordForEdit != null)
-  //     setValues({
-  //       ...recordForEdit,
-  //     });
-  // }, [recordForEdit]);
-  // useEffect(() => {
-  //   debugger;
-  //   if (currentId != 0) {
-  //     setValues({
-  //       ...employeeState.find((x) => x.id == currentId),
-  //     });
-  //   }
-  // }, [currentId]);
+  useEffect(() => {
+    debugger;
+    if (recordForEdit != null)
+      setValues({
+        ...data,
+      });
+  }, [recordForEdit]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -87,7 +80,6 @@ const EmployeeForm = (props) => {
       SelectedSkillList: newdata,
     });
   };
-
   const onRemove = (data) => {
     setValues({
       ...values,
@@ -96,6 +88,13 @@ const EmployeeForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
+    debugger;
+    // const data = new FormData();
+    // data.append('id', recordForEdit ? recordForEdit.id : 0);
+    // data.append('name', values.name);
+    // data.append('code', values.code);
+    // data.append('startDate', values.startDate);
+    // data.append('releaseDate', values.releaseDate);
     if (recordForEdit == null) {
       dispatch(
         actions.create(
@@ -107,6 +106,7 @@ const EmployeeForm = (props) => {
     } else {
       dispatch(
         actions.update(
+          recordForEdit.id,
           values,
           addToast('Employee Updated Successfully', { appearance: 'success' })
         )
@@ -124,7 +124,7 @@ const EmployeeForm = (props) => {
             onSubmit={onSubmit}
             enableReinitialize
           >
-            {({ errors, touched, setFieldValue, values }) => {
+            {({ errors, touched, values }) => {
               return (
                 <Form autoComplete="off" noValidate>
                   <div className="row">
@@ -144,7 +144,7 @@ const EmployeeForm = (props) => {
                         onKeyDown={(e) =>
                           e.keyCode > 48 && e.keyCode < 57 && e.preventDefault()
                         }
-                        // value={values.name}
+                        value={values?.name}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -163,7 +163,7 @@ const EmployeeForm = (props) => {
                         className={
                           errors.code && touched.code ? 'err-field' : 'field'
                         }
-                        value={values.code}
+                        value={values?.code}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -187,7 +187,7 @@ const EmployeeForm = (props) => {
                         // onSelect={onSelect}
                         onRemove={onRemove}
                         onChange={onSelect}
-                        // value={values.SelectedSkillList}
+                        // value={values?.SelectedSkillList}
                       />
                     </div>
                   </div>
@@ -204,7 +204,7 @@ const EmployeeForm = (props) => {
                             ? 'err-field'
                             : 'field'
                         }
-                        value={values.startDate}
+                        value={values?.startDate}
                         // onChange={(date) => setStartDate(date)}
                       />
                     </div>
@@ -222,7 +222,7 @@ const EmployeeForm = (props) => {
                             ? 'err-field'
                             : 'field'
                         }
-                        value={values.releaseDate}
+                        value={values?.releaseDate}
                         // onChange={(date) => setReleaseDate(date)}
                       />
                     </div>

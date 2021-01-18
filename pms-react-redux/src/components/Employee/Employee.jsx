@@ -52,7 +52,7 @@ const Employee = () => {
     setSearchResult(dataAfterFilter);
   }, [searchInput, employeeState]);
   const openInPopup = (item) => {
-    // setRecordForEdit(item);
+    setRecordForEdit(item);
     setCurrentId(item.id);
     setOpenPopup(true);
   };
@@ -79,7 +79,7 @@ const Employee = () => {
           onClick={() => {
             openInPopup(employee);
             // setOpenPopup(true);
-            // setRecordForEdit(employee);
+            setRecordForEdit(employee);
           }}
         >
           <EditIcon color="primary" />

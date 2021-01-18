@@ -42,41 +42,41 @@ namespace ProjectManagementWebApiCore.Controllers
         }
 
         // PUT: api/Employees/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTblEmployee(int id, TblEmployee tblEmployee)
-        //{
-        //    if (id != tblEmployee.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTblEmployee(int id, TblEmployee tblEmployee)
+        {
+            //if (id != tblEmployee.Id)
+            //{
+            //    return BadRequest();
+            //}
+            tblEmployee.Id = id;
+            _context.Entry(tblEmployee).State = EntityState.Modified;
 
-        //    _context.Entry(tblEmployee).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TblEmployeeExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblEmployeeExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         // POST: api/Employees
         //[HttpPost]
         //public async Task<ActionResult<TblEmployee>> PostTblEmployee(TblEmployee tblEmployee , [FromForm]ManageEmployee manageEmployee)
         //{
         //    //_context.TblEmployee.Add(tblEmployee);
-                
+
         //    //var selectlist = _context.TblSkillsMaster.Select(c => new
         //    //{
         //    //    CategoryID = c.Id,
@@ -174,62 +174,62 @@ namespace ProjectManagementWebApiCore.Controllers
         }
 
         // PUT: api/Employees/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, ManageEmployee manageEmployee)
-        {
-            var empId = id;
-            var initialId = 0;
-            var tblEmployee = await _context.TblEmployee.FindAsync(id);
-            if (id != empId)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutEmployee(int id, ManageEmployee manageEmployee, [FromForm]TblEmployee tblEmployee)
+        //{
+        //    var empId = id;
+        //    var initialId = 0;
+        //    //var tblEmployee = await _context.TblEmployee.FindAsync(id);
+        //    if (id != empId)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(tblEmployee).State = EntityState.Modified;
-            var tempId = (from p in _context.TblEmployeeSkill
-                      orderby p.Id descending
-                      select p.Id).Take(1).SingleOrDefault();
-            if (tempId == null)
-            {
-                initialId = 0;
-            }
-            else
-            {
-                initialId = tempId.Value;
-            }
-            _context.TblEmployeeSkill.RemoveRange(_context.TblEmployeeSkill.Where(x => x.EmployeeId == id));
-            _context.SaveChanges();
-            var empSkillId = initialId;
-            TblEmployeeSkill empSkill = new TblEmployeeSkill();
-            var skillcount = manageEmployee.SelectedSkillList;
-            for (int i = 0; i < skillcount.Count(); i++)
-            {
-                empSkillId++;
-                empSkill.Id = empSkillId;
-                empSkill.EmployeeId = id;
-                empSkill.SkillId = Convert.ToInt32(skillcount.ElementAt(i));
-                _context.TblEmployeeSkill.Add(empSkill);
-                await _context.SaveChangesAsync();
-            };
-            try
-            {
-                await _context.SaveChangesAsync();
+        //    _context.Entry(tblEmployee).State = EntityState.Modified;
+        //    var tempId = (from p in _context.TblEmployeeSkill
+        //              orderby p.Id descending
+        //              select p.Id).Take(1).SingleOrDefault();
+        //    if (tempId == null)
+        //    {
+        //        initialId = 0;
+        //    }
+        //    else
+        //    {
+        //        initialId = tempId.Value;
+        //    }
+        //    _context.TblEmployeeSkill.RemoveRange(_context.TblEmployeeSkill.Where(x => x.EmployeeId == id));
+        //    _context.SaveChanges();
+        //    var empSkillId = initialId;
+        //    TblEmployeeSkill empSkill = new TblEmployeeSkill();
+        //    var skillcount = manageEmployee.SelectedSkillList;
+        //    for (int i = 0; i < skillcount.Count(); i++)
+        //    {
+        //        empSkillId++;
+        //        empSkill.Id = empSkillId;
+        //        empSkill.EmployeeId = id;
+        //        empSkill.SkillId = Convert.ToInt32(skillcount.ElementAt(i));
+        //        _context.TblEmployeeSkill.Add(empSkill);
+        //        await _context.SaveChangesAsync();
+        //    };
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
                
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblEmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!TblEmployeeExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // DELETE: api/Employees/5
         [HttpDelete("{id}")]

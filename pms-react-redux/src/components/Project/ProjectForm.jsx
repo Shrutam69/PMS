@@ -18,7 +18,13 @@ import { useToasts } from 'react-toast-notifications';
 
 const ProjectForm = (props) => {
   const { addToast } = useToasts();
-  const { addOrEdit, recordForEdit, openPopup, setOpenPopup } = props;
+  const {
+    addOrEdit,
+    recordForEdit,
+    openPopup,
+    setOpenPopup,
+    setRecordForEdit,
+  } = props;
   const skillsState = useSelector((state) => state.skillsReducer.list);
   const dispatch = useDispatch();
   const getSkillsList = () => {
@@ -36,8 +42,8 @@ const ProjectForm = (props) => {
     endDate: new Date(),
     SelectedSkillList: [],
   };
-
-  const [values, setValues] = useState(initialFieldValues);
+  const [values, setValues] = useState(recordForEdit);
+  const [data, setData] = useState([recordForEdit]);
   //Validation
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -48,16 +54,13 @@ const ProjectForm = (props) => {
     code: Yup.string().trim().required('This field is required'),
   });
   useEffect(() => {
+    debugger;
     if (recordForEdit != null)
       setValues({
-        ...recordForEdit,
+        ...data,
       });
-    else {
-      setValues({
-        ...initialFieldValues,
-      });
-    }
   }, [recordForEdit]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -83,14 +86,25 @@ const ProjectForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
-    console.log('values', values);
-    dispatch(
-      actions.create(
-        values,
-        addToast('Project Added Successfully', { appearance: 'success' })
-      )
-    );
-    setOpenPopup(false);
+    debugger;
+    if (recordForEdit == null) {
+      dispatch(
+        actions.create(
+          values,
+          addToast('Project Added Successfully', { appearance: 'success' })
+        )
+      );
+      setOpenPopup(false);
+    } else {
+      dispatch(
+        actions.update(
+          recordForEdit.id,
+          values,
+          addToast('Project Updated Successfully', { appearance: 'success' })
+        )
+      );
+      setOpenPopup(false);
+    }
   };
   return (
     <div>
@@ -102,7 +116,7 @@ const ProjectForm = (props) => {
             onSubmit={onSubmit}
             enableReinitialize
           >
-            {({ errors, touched, setFieldValue, values }) => {
+            {({ errors, touched, values }) => {
               return (
                 <Form autoComplete="off" noValidate>
                   <div className="row">
@@ -122,7 +136,7 @@ const ProjectForm = (props) => {
                         onKeyDown={(e) =>
                           e.keyCode > 48 && e.keyCode < 57 && e.preventDefault()
                         }
-                        value={values.name}
+                        value={values?.name}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -141,7 +155,7 @@ const ProjectForm = (props) => {
                         className={
                           errors.code && touched.code ? 'err-field' : 'field'
                         }
-                        value={values.code}
+                        value={values?.code}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -184,7 +198,7 @@ const ProjectForm = (props) => {
                             ? 'err-field'
                             : 'field'
                         }
-                        value={values.startDate}
+                        value={values?.startDate}
                         // onChange={(date) => setStartDate(date)}
                       />
                     </div>
@@ -198,7 +212,7 @@ const ProjectForm = (props) => {
                         control="date"
                         name="endDate"
                         className="field"
-                        value={values.endDate}
+                        value={values?.endDate}
                         // onChange={(date) => setReleaseDate(date)}
                       />
                     </div>
@@ -223,7 +237,7 @@ const ProjectForm = (props) => {
                       style={{ padding: '6px 12px' }}
                       onClick={() => {
                         setOpenPopup(false);
-                        // setRecordForEdit(null);
+                        setRecordForEdit(null);
                       }}
                     >
                       Cancel

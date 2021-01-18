@@ -74,8 +74,8 @@ const Project = (props) => {
       <ButtonGroup variant="text">
         <Button
           onClick={() => {
-            setOpenPopup(true);
-            // openInPopup(project);
+            // setOpenPopup(true);
+            openInPopup(project);
           }}
         >
           <EditIcon color="primary" />
