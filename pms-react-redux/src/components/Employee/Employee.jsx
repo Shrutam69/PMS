@@ -23,7 +23,8 @@ import { useToasts } from 'react-toast-notifications';
 const Employee = () => {
   const { addToast } = useToasts();
   const [openPopup, setOpenPopup] = useState(false);
-  const [recordForEdit, setRecordForEdit] = useState(null);
+  const [recordForEdit, setRecordForEdit] = useState({});
+  const [currentId, setCurrentId] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
@@ -33,9 +34,8 @@ const Employee = () => {
   const employeeState = useSelector((state) => state.employeeReducer.list);
   const dispatch = useDispatch();
   const getEmployeeList = () => {
-    const list = dispatch(actions.fetchAll());
+    dispatch(actions.fetchAll());
   };
-
   useEffect(() => {
     getEmployeeList();
   }, [employeeState]);
@@ -52,11 +52,11 @@ const Employee = () => {
     setSearchResult(dataAfterFilter);
   }, [searchInput, employeeState]);
   const openInPopup = (item) => {
-    setRecordForEdit(item);
+    // setRecordForEdit(item);
+    setCurrentId(item.id);
     setOpenPopup(true);
   };
   const onDelete = (id) => {
-    debugger;
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
@@ -77,8 +77,8 @@ const Employee = () => {
       <ButtonGroup variant="text">
         <Button
           onClick={() => {
-            console.log(employee);
-            setOpenPopup(true);
+            openInPopup(employee);
+            // setOpenPopup(true);
             // setRecordForEdit(employee);
           }}
         >
@@ -156,7 +156,7 @@ const Employee = () => {
       <div className="border">
         <Table
           columns={columns}
-          dataSource={searchResult}
+          dataSource={searchResult.reverse()}
           pagination={{
             defaultPageSize: 5,
             showSizeChanger: true,
@@ -173,8 +173,9 @@ const Employee = () => {
       >
         <EmployeeForm
           recordForEdit={recordForEdit}
-          // openPopup={openPopup}
           setOpenPopup={setOpenPopup}
+          currentId={currentId}
+          setCurrentId={setCurrentId}
         />
       </Popup>
       <ConfirmDialog

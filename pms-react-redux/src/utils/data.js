@@ -19,11 +19,17 @@ export const tableHeadersProject = [
     title: 'Start Date',
     dataIndex: 'startDate',
     key: 'startDate',
+    sorter: (a, b) => {
+      return a.startDate.localeCompare(b.startDate);
+    },
   },
   {
     title: 'End Date',
     dataIndex: 'endDate',
     key: 'endDate',
+    sorter: (a, b) => {
+      return a.endDate.localeCompare(b.endDate);
+    },
   },
 ];
 export const tableHeaders = [
@@ -47,11 +53,17 @@ export const tableHeaders = [
     title: 'Start Date',
     dataIndex: 'startDate',
     key: 'startDate',
+    sorter: (a, b) => {
+      return a.startDate.localeCompare(b.startDate);
+    },
   },
   {
     title: 'Release Date',
     dataIndex: 'releaseDate',
     key: 'releaseDate',
+    sorter: (a, b) => {
+      return a.releaseDate.localeCompare(b.releaseDate);
+    },
   },
 ];
 

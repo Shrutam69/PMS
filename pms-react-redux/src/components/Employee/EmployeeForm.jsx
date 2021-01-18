@@ -18,7 +18,13 @@ import { useToasts } from 'react-toast-notifications';
 
 const EmployeeForm = (props) => {
   const { addToast } = useToasts();
-  const { addOrEdit, recordForEdit, openPopup, setOpenPopup } = props;
+  const {
+    addOrEdit,
+    recordForEdit,
+    openPopup,
+    setOpenPopup,
+    currentId,
+  } = props;
   const skillsState = useSelector((state) => state.skillsReducer.list);
   const dispatch = useDispatch();
   const getSkillsList = () => {
@@ -27,7 +33,10 @@ const EmployeeForm = (props) => {
   useEffect(() => {
     getSkillsList();
   }, []);
-
+  const employeeState = useSelector((state) => state.employeeReducer.list);
+  const getEmployeeList = () => {
+    dispatch(actions.fetchAll());
+  };
   const initialFieldValues = {
     id: 0,
     name: '',
@@ -38,7 +47,6 @@ const EmployeeForm = (props) => {
   };
 
   const [values, setValues] = useState(initialFieldValues);
-  const [skills, setSkills] = useState([]);
   //Validation
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -48,17 +56,21 @@ const EmployeeForm = (props) => {
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
   });
-  useEffect(() => {
-    if (recordForEdit != null)
-      setValues({
-        ...recordForEdit,
-      });
-    else {
-      setValues({
-        ...initialFieldValues,
-      });
-    }
-  }, [recordForEdit]);
+  // useEffect(() => {
+  //   debugger;
+  //   if (recordForEdit != null)
+  //     setValues({
+  //       ...recordForEdit,
+  //     });
+  // }, [recordForEdit]);
+  // useEffect(() => {
+  //   debugger;
+  //   if (currentId != 0) {
+  //     setValues({
+  //       ...employeeState.find((x) => x.id == currentId),
+  //     });
+  //   }
+  // }, [currentId]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -132,7 +144,7 @@ const EmployeeForm = (props) => {
                         onKeyDown={(e) =>
                           e.keyCode > 48 && e.keyCode < 57 && e.preventDefault()
                         }
-                        value={values.name}
+                        // value={values.name}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -158,9 +170,7 @@ const EmployeeForm = (props) => {
                   </div>
                   <div className="row mt-3">
                     <div className="col-sm-3 d-flex justify-content-sm-start justify-content-md-end pt-1 pr-0">
-                      <label>
-                        Skills<span className="text-danger">*</span>
-                      </label>
+                      <label>Skills</label>
                     </div>
                     <div className="col-sm-9">
                       <Select

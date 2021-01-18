@@ -14,7 +14,7 @@ export const fetchAll = () => (dispatch) => {
     .actions(SKILL_URL)
     .fetchAll()
     .then((response) => {
-      console.log('skills', response);
+      // console.log('skills', response);
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_SKILLS,
         payload: response.data,
