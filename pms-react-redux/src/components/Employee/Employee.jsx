@@ -25,7 +25,6 @@ const Employee = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [searchInput, setSearchInput] = useState('');
-  const inputChange = true;
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
     title: '',
@@ -39,20 +38,19 @@ const Employee = () => {
 
   useEffect(() => {
     getEmployeeList();
-  }, []);
-  console.log('employeeState', employeeState);
+  }, [employeeState]);
   const [searchResult, setSearchResult] = useState([...employeeState]);
   useEffect(() => {
-    setSearchResult(...employeeState);
+    setSearchResult([...employeeState]);
   }, []);
   useEffect(() => {
-    let dataAfterFilter = inputChange
+    let dataAfterFilter = searchInput
       ? employeeState.filter((x) =>
           x.name.toLowerCase().includes(searchInput.toLowerCase())
         )
-      : '';
+      : employeeState;
     setSearchResult(dataAfterFilter);
-  }, [searchInput]);
+  }, [searchInput, employeeState]);
   const openInPopup = (item) => {
     setRecordForEdit(item);
     setOpenPopup(true);

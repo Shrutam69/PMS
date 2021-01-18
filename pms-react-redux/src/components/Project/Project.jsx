@@ -24,9 +24,7 @@ const Project = (props) => {
   const { addToast } = useToasts();
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [searchResult, setSearchResult] = useState([]);
   const [searchInput, setSearchInput] = useState('');
-  const inputChange = true;
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
     title: '',
@@ -35,23 +33,24 @@ const Project = (props) => {
 
   const dispatch = useDispatch();
   const projectState = useSelector((state) => state.projectReducer.list);
-
   const getProjectList = () => {
     dispatch(actions.fetchAll());
   };
-
   useEffect(() => {
     getProjectList();
-  }, []);
-
+  }, [projectState]);
+  const [searchResult, setSearchResult] = useState([...projectState]);
   useEffect(() => {
-    let dataAfterFilter = inputChange
+    setSearchResult([...projectState]);
+  }, []);
+  useEffect(() => {
+    let dataAfterFilter = searchInput
       ? projectState.filter((x) =>
           x.name.toLowerCase().includes(searchInput.toLowerCase())
         )
-      : '';
+      : projectState;
     setSearchResult(dataAfterFilter);
-  }, [searchInput]);
+  }, [searchInput, projectState]);
   const openInPopup = (item) => {
     setRecordForEdit(item);
     setOpenPopup(true);
