@@ -22,7 +22,6 @@ import { useToasts } from 'react-toast-notifications';
 
 const Employee = () => {
   const { addToast } = useToasts();
-  // const [employee, setEmployee] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [searchResult, setSearchResult] = useState([]);
@@ -42,22 +41,20 @@ const Employee = () => {
     getEmployeeList();
   }, [employeeState]);
   useEffect(() => {
-    debugger;
     setSearchResult(...employeeState);
   }, []);
-  // const [employee, setEmployee] = useState([employeeState]);
-  // useEffect(() => {
-  //   let dataAfterFilter = inputChange
-  //     ? employeeState.filter((x) =>
-  //         x.name.toLowerCase().includes(searchInput.toLowerCase())
-  //       )
-  //     : '';
-  //   setSearchResult(dataAfterFilter);
-  // }, [searchInput]);
-  // const openInPopup = (item) => {
-  //   setRecordForEdit(item);
-  //   setOpenPopup(true);
-  // };
+  useEffect(() => {
+    let dataAfterFilter = inputChange
+      ? employeeState.filter((x) =>
+          x.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      : '';
+    setSearchResult(dataAfterFilter);
+  }, [searchInput]);
+  const openInPopup = (item) => {
+    setRecordForEdit(item);
+    setOpenPopup(true);
+  };
   const onDelete = (id) => {
     setConfirmDialog({
       ...confirmDialog,
@@ -87,7 +84,6 @@ const Employee = () => {
         </Button>
         <Button
           onClick={() => {
-            debugger;
             setConfirmDialog({
               isOpen: true,
               title: 'Are you sure to delete employee?',
@@ -158,7 +154,7 @@ const Employee = () => {
       <div className="border">
         <Table
           columns={columns}
-          dataSource={employeeState}
+          dataSource={searchResult}
           pagination={{
             defaultPageSize: 5,
             showSizeChanger: true,

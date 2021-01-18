@@ -46,8 +46,6 @@ const ProjectForm = (props) => {
       .min(3, 'Mininum 3 characters allowed')
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
-    // startDate: Yup.string().required('This field is required'),
-    // releaseDate: Yup.string().required('This field is required'),
   });
   useEffect(() => {
     if (recordForEdit != null)
@@ -68,7 +66,6 @@ const ProjectForm = (props) => {
     });
   };
   const onSelect = (data) => {
-    debugger;
     let newdata = data?.map((test) => {
       return test.value;
     });

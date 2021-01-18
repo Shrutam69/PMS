@@ -47,11 +47,8 @@ const EmployeeForm = (props) => {
       .min(3, 'Mininum 3 characters allowed')
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
-    // startDate: Yup.string().required('This field is required'),
-    // releaseDate: Yup.string().required('This field is required'),
   });
   useEffect(() => {
-    debugger;
     if (recordForEdit != null)
       setValues({
         ...recordForEdit,
@@ -70,7 +67,6 @@ const EmployeeForm = (props) => {
     });
   };
   const onSelect = (data) => {
-    debugger;
     let newdata = data?.map((test) => {
       return test.value;
     });
@@ -88,7 +84,6 @@ const EmployeeForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
-    debugger;
     console.log('values', values);
     dispatch(
       actions.create(

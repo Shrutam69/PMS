@@ -24,6 +24,9 @@ const Project = (props) => {
   const { addToast } = useToasts();
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
+  const inputChange = true;
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
     title: '',
@@ -40,7 +43,14 @@ const Project = (props) => {
   useEffect(() => {
     getProjectList();
   }, [projectState]);
-
+  useEffect(() => {
+    let dataAfterFilter = inputChange
+      ? projectState.filter((x) =>
+          x.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      : '';
+    setSearchResult(dataAfterFilter);
+  }, [searchInput]);
   const openInPopup = (item) => {
     setRecordForEdit(item);
     setOpenPopup(true);
@@ -132,7 +142,7 @@ const Project = (props) => {
                   ),
                 }}
                 onChange={(e) => {
-                  // setSearchInput(e.target.value);
+                  setSearchInput(e.target.value);
                 }}
               />
             </Toolbar>
@@ -142,7 +152,7 @@ const Project = (props) => {
       <div className="border">
         <Table
           columns={columns}
-          dataSource={projectState}
+          dataSource={searchResult}
           pagination={{
             defaultPageSize: 5,
             showSizeChanger: true,
