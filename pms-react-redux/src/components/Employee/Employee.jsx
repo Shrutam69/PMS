@@ -42,18 +42,17 @@ const Employee = () => {
   }, []);
   console.log('employeeState', employeeState);
   const [searchResult, setSearchResult] = useState([...employeeState]);
-
-  // useEffect(() => {
-  //   setSearchResult(...employeeState);
-  // }, []);
-  // useEffect(() => {
-  //   let dataAfterFilter = inputChange
-  //     ? employeeState.filter((x) =>
-  //         x.name.toLowerCase().includes(searchInput.toLowerCase())
-  //       )
-  //     : '';
-  //   setSearchResult(dataAfterFilter);
-  // }, [searchInput]);
+  useEffect(() => {
+    setSearchResult(...employeeState);
+  }, []);
+  useEffect(() => {
+    let dataAfterFilter = inputChange
+      ? employeeState.filter((x) =>
+          x.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      : '';
+    setSearchResult(dataAfterFilter);
+  }, [searchInput]);
   const openInPopup = (item) => {
     setRecordForEdit(item);
     setOpenPopup(true);

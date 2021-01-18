@@ -14,7 +14,7 @@ export const fetchAll = () => (dispatch) => {
     .actions(PROJECT_URL)
     .fetchAll()
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_PROJECT,
         payload: response.data,
