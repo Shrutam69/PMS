@@ -84,14 +84,23 @@ const EmployeeForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
-    console.log('values', values);
-    dispatch(
-      actions.create(
-        values,
-        addToast('Employee Added Successfully', { appearance: 'success' })
-      )
-    );
-    setOpenPopup(false);
+    if (recordForEdit == null) {
+      dispatch(
+        actions.create(
+          values,
+          addToast('Employee Added Successfully', { appearance: 'success' })
+        )
+      );
+      setOpenPopup(false);
+    } else {
+      dispatch(
+        actions.update(
+          values,
+          addToast('Employee Updated Successfully', { appearance: 'success' })
+        )
+      );
+      setOpenPopup(false);
+    }
   };
   return (
     <div>

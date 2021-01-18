@@ -24,7 +24,6 @@ const Employee = () => {
   const { addToast } = useToasts();
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [searchResult, setSearchResult] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const inputChange = true;
   const [confirmDialog, setConfirmDialog] = useState({
@@ -37,25 +36,30 @@ const Employee = () => {
   const getEmployeeList = () => {
     const list = dispatch(actions.fetchAll());
   };
+
   useEffect(() => {
     getEmployeeList();
-  }, [employeeState]);
-  useEffect(() => {
-    setSearchResult(...employeeState);
   }, []);
-  useEffect(() => {
-    let dataAfterFilter = inputChange
-      ? employeeState.filter((x) =>
-          x.name.toLowerCase().includes(searchInput.toLowerCase())
-        )
-      : '';
-    setSearchResult(dataAfterFilter);
-  }, [searchInput]);
+  console.log('employeeState', employeeState);
+  const [searchResult, setSearchResult] = useState([...employeeState]);
+
+  // useEffect(() => {
+  //   setSearchResult(...employeeState);
+  // }, []);
+  // useEffect(() => {
+  //   let dataAfterFilter = inputChange
+  //     ? employeeState.filter((x) =>
+  //         x.name.toLowerCase().includes(searchInput.toLowerCase())
+  //       )
+  //     : '';
+  //   setSearchResult(dataAfterFilter);
+  // }, [searchInput]);
   const openInPopup = (item) => {
     setRecordForEdit(item);
     setOpenPopup(true);
   };
   const onDelete = (id) => {
+    debugger;
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
@@ -65,7 +69,8 @@ const Employee = () => {
         addToast('Deleted Successfully', { appearance: 'info' })
       )
     );
-    // getEmployeeList();
+    getEmployeeList();
+    setSearchResult(employeeState);
   };
   const actionColumn = {
     title: 'Actions',

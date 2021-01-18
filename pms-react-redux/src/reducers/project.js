@@ -10,19 +10,19 @@ export const projectReducer = (state = initialState, action) => {
         ...state,
         list: [...action.payload],
       };
-    case ACTION_TYPES.CREATE_PRODUCT:
+    case ACTION_TYPES.CREATE_PROJECT:
       return {
         ...state,
         list: [...state.list, action.payload],
       };
-    case ACTION_TYPES.UPDATE_PRODUCT:
+    case ACTION_TYPES.UPDATE_PROJECT:
       return {
         ...state,
         list: state.list.map((x) =>
           x.Id === action.payload.id ? action.payload : x
         ),
       };
-    case ACTION_TYPES.DELETE_PRODUCT:
+    case ACTION_TYPES.DELETE_PROJECT:
       return {
         ...state,
         list: state.list.filter((x) => x.Id !== action.payload),

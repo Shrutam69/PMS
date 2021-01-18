@@ -42,7 +42,8 @@ const Project = (props) => {
 
   useEffect(() => {
     getProjectList();
-  }, [projectState]);
+  }, []);
+
   useEffect(() => {
     let dataAfterFilter = inputChange
       ? projectState.filter((x) =>
