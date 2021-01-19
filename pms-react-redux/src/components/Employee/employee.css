@@ -61,6 +61,15 @@ input::-webkit-inner-spin-button {
 ._3vt7_Mh4hRCFbp__dFqBCI input {
   margin-top: 0px !important;
 }
-.select__control css-yk16xz-control {
+
+.css-yk16xz-control {
+  border-radius: 0px !important;
+  box-shadow: none !important;
+  border-color: #dddddd !important;
+}
+.css-1pahdxg-control,
+.css-1pahdxg-control:hover {
+  border-color: #dddddd !important;
+  box-shadow: none !important;
   border-radius: 0px !important;
 }

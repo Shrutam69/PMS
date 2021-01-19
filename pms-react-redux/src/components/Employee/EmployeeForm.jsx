@@ -7,46 +7,51 @@ import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import './employee.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Multiselect } from 'multiselect-react-dropdown';
 import * as actions from '../../actions/employee';
 import * as skillsactions from '../../actions/skills';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from 'react-select';
-import { options } from '../../utils/data';
 import { useToasts } from 'react-toast-notifications';
+import moment from 'moment';
 
 const EmployeeForm = (props) => {
+  debugger;
   const { addToast } = useToasts();
-  const {
-    addOrEdit,
-    recordForEdit,
-    openPopup,
-    setOpenPopup,
-    currentId,
-  } = props;
+  const { recordForEdit, setOpenPopup } = props;
   const skillsState = useSelector((state) => state.skillsReducer.list);
+  const getSkillsList = () => {
+    dispatch(skillsactions.fetchAll());
+  };
+
+  useEffect(() => {
+    getSkillsList();
+  }, []);
+
+  const skilllist = skillsState.map((data, index) => {
+    return { value: data.id, label: data.name };
+  });
   const dispatch = useDispatch();
-  // const getSkillsList = () => {
-  //   dispatch(skillsactions.fetchAll());
-  // };
-  // useEffect(() => {
-  //   getSkillsList();
-  // }, []);
-  const [data, setData] = useState([recordForEdit]);
-  // useEffect(() => {
-  //   getEmployeeList();
-  // }, [employeeState]);
+  // let newStartDate = recordForEdit
+  //   ? moment(recordForEdit.startDate).format('DD/MM/YYYY')
+  //   : new Date();
+  // let newReleaseDate = recordForEdit
+  //   ? moment(recordForEdit.releaseDate).format('DD/MM/YYYY')
+  //   : new Date();
   const initialFieldValues = {
-    id: 0,
-    name: '',
-    code: '',
-    startDate: new Date(),
-    releaseDate: new Date(),
+    id: recordForEdit ? recordForEdit.id : 0,
+    name: recordForEdit ? recordForEdit.name : '',
+    code: recordForEdit ? recordForEdit.code : '',
+    // startDate: recordForEdit ? new Date(newStartDate) : new Date(),
+    startDate: recordForEdit
+      ? new Date(Date.parse(recordForEdit.startDate))
+      : new Date(),
+    releaseDate: recordForEdit
+      ? new Date(Date.parse(recordForEdit.releaseDate))
+      : new Date(),
     SelectedSkillList: [],
   };
-  const [values, setValues] = useState(
-    recordForEdit ? recordForEdit : initialFieldValues
-  );
+  const [values, setValues] = useState(initialFieldValues);
+
   //Validation
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -56,15 +61,9 @@ const EmployeeForm = (props) => {
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
   });
-  useEffect(() => {
-    debugger;
-    if (recordForEdit != null)
-      setValues({
-        ...data,
-      });
-  }, [recordForEdit]);
 
   const handleInputChange = (e) => {
+    debugger;
     const { name, value } = e.target;
     setValues({
       ...values,
@@ -88,13 +87,6 @@ const EmployeeForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
-    debugger;
-    // const data = new FormData();
-    // data.append('id', recordForEdit ? recordForEdit.id : 0);
-    // data.append('name', values.name);
-    // data.append('code', values.code);
-    // data.append('startDate', values.startDate);
-    // data.append('releaseDate', values.releaseDate);
     if (recordForEdit == null) {
       dispatch(
         actions.create(
@@ -114,6 +106,7 @@ const EmployeeForm = (props) => {
       setOpenPopup(false);
     }
   };
+
   return (
     <div>
       <div className="p-2">
@@ -176,12 +169,15 @@ const EmployeeForm = (props) => {
                       <Select
                         isMulti
                         name="SelectedSkillList"
-                        options={options}
+                        options={skilllist}
                         className="basic-multi-select"
                         // className={
                         //   errors.code && touched.code
                         //     ? 'err-field basic-multi-select'
                         //     : 'field basic-multi-select'
+                        // }
+                        // isOptionSelected={
+                        //   options.value === values?.SelectedSkillList.skillId
                         // }
                         classNamePrefix="select"
                         // onSelect={onSelect}
@@ -205,6 +201,7 @@ const EmployeeForm = (props) => {
                             : 'field'
                         }
                         value={values?.startDate}
+                        minDate={recordForEdit ? '' : new Date()}
                         // onChange={(date) => setStartDate(date)}
                       />
                     </div>
@@ -218,11 +215,12 @@ const EmployeeForm = (props) => {
                         control="date"
                         name="releaseDate"
                         className={
-                          errors.startDate && touched.startDate
+                          errors.releaseDate && touched.releaseDate
                             ? 'err-field'
                             : 'field'
                         }
                         value={values?.releaseDate}
+                        minDate={recordForEdit ? values?.startDate : new Date()}
                         // onChange={(date) => setReleaseDate(date)}
                       />
                     </div>

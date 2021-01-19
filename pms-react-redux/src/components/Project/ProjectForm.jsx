@@ -13,7 +13,6 @@ import * as actions from '../../actions/project';
 import * as skillsactions from '../../actions/skills';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from 'react-select';
-import { options } from '../../utils/data';
 import { useToasts } from 'react-toast-notifications';
 
 const ProjectForm = (props) => {
@@ -33,6 +32,9 @@ const ProjectForm = (props) => {
   useEffect(() => {
     getSkillsList();
   }, []);
+  const skilllist = skillsState.map((data, index) => {
+    return { value: data.id, label: data.name };
+  });
 
   const initialFieldValues = {
     id: 0,
@@ -42,7 +44,9 @@ const ProjectForm = (props) => {
     endDate: new Date(),
     SelectedSkillList: [],
   };
-  const [values, setValues] = useState(recordForEdit);
+  const [values, setValues] = useState(
+    recordForEdit ? recordForEdit : initialFieldValues
+  );
   const [data, setData] = useState([recordForEdit]);
   //Validation
   const validationSchema = Yup.object({
@@ -162,15 +166,13 @@ const ProjectForm = (props) => {
                   </div>
                   <div className="row mt-3">
                     <div className="col-sm-3 d-flex justify-content-sm-start justify-content-md-end pt-1 pr-0">
-                      <label>
-                        Skills<span className="text-danger">*</span>
-                      </label>
+                      <label>Skills</label>
                     </div>
                     <div className="col-sm-9">
                       <Select
                         isMulti
                         name="SelectedSkillList"
-                        options={options}
+                        options={skilllist}
                         className="basic-multi-select"
                         // className={
                         //   errors.code && touched.code
@@ -237,7 +239,7 @@ const ProjectForm = (props) => {
                       style={{ padding: '6px 12px' }}
                       onClick={() => {
                         setOpenPopup(false);
-                        setRecordForEdit(null);
+                        // setRecordForEdit(null);
                       }}
                     >
                       Cancel

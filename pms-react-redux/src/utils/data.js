@@ -66,11 +66,3 @@ export const tableHeaders = [
     },
   },
 ];
-
-export const options = [
-  { value: 1, label: 'React' },
-  { value: 2, label: 'Node' },
-  { value: 4, label: '.Net' },
-  { value: 5, label: 'Php' },
-  { value: 6, label: 'Angular' },
-];

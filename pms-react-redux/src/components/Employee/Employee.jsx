@@ -19,6 +19,7 @@ import Popup from '../Shared/Popup';
 import EmployeeForm from './EmployeeForm';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import { useToasts } from 'react-toast-notifications';
+import moment from 'moment';
 
 const Employee = () => {
   const { addToast } = useToasts();
@@ -41,19 +42,31 @@ const Employee = () => {
   }, [employeeState]);
   const [searchResult, setSearchResult] = useState([...employeeState]);
   useEffect(() => {
-    setSearchResult([...employeeState]);
-  }, []);
-  useEffect(() => {
     let dataAfterFilter = searchInput
       ? employeeState.filter((x) =>
           x.name.toLowerCase().includes(searchInput.toLowerCase())
         )
       : employeeState;
+    for (let i = 0; i < employeeState.length; i++) {
+      // let formattedStartDate = moment(dataAfterFilter[i].startDate).format(
+      //   'DD/MM/YYYY'
+      // );
+      // let formattedReleaseDate = moment(dataAfterFilter[i].releaseDate).format(
+      //   'DD/MM/YYYY'
+      // );
+      // dataAfterFilter[i].startDate = formattedStartDate;
+      // dataAfterFilter[i].releaseDate = formattedReleaseDate;
+      dataAfterFilter[i].startDate = new Date(
+        dataAfterFilter[i].startDate
+      ).toLocaleDateString();
+      dataAfterFilter[i].releaseDate = new Date(
+        dataAfterFilter[i].releaseDate
+      ).toLocaleDateString();
+    }
     setSearchResult(dataAfterFilter);
   }, [searchInput, employeeState]);
   const openInPopup = (item) => {
     setRecordForEdit(item);
-    setCurrentId(item.id);
     setOpenPopup(true);
   };
   const onDelete = (id) => {
@@ -66,7 +79,6 @@ const Employee = () => {
         addToast('Deleted Successfully', { appearance: 'info' })
       )
     );
-    getEmployeeList();
     setSearchResult(employeeState);
   };
   const actionColumn = {
@@ -78,8 +90,7 @@ const Employee = () => {
         <Button
           onClick={() => {
             openInPopup(employee);
-            // setOpenPopup(true);
-            setRecordForEdit(employee);
+            // setRecordForEdit(employee);
           }}
         >
           <EditIcon color="primary" />
@@ -156,7 +167,7 @@ const Employee = () => {
       <div className="border">
         <Table
           columns={columns}
-          dataSource={searchResult.reverse()}
+          dataSource={searchResult}
           pagination={{
             defaultPageSize: 5,
             showSizeChanger: true,

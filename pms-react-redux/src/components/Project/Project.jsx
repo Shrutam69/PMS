@@ -19,6 +19,7 @@ import Popup from '../Shared/Popup';
 import ProjectForm from './ProjectForm';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import { useToasts } from 'react-toast-notifications';
+import moment from 'moment';
 
 const Project = (props) => {
   const { addToast } = useToasts();
@@ -38,7 +39,7 @@ const Project = (props) => {
   };
   useEffect(() => {
     getProjectList();
-  }, [projectState]);
+  }, []);
   const [searchResult, setSearchResult] = useState([...projectState]);
   useEffect(() => {
     setSearchResult([...projectState]);
@@ -49,6 +50,22 @@ const Project = (props) => {
           x.name.toLowerCase().includes(searchInput.toLowerCase())
         )
       : projectState;
+    for (let i = 0; i < dataAfterFilter.length; i++) {
+      let formattedStartDate = moment(dataAfterFilter[i].startDate).format(
+        'DD-MM-YYYY'
+      );
+      let formattedEndDate = moment(dataAfterFilter[i].startDate).format(
+        'DD-MM-YYYY'
+      );
+      dataAfterFilter[i].startDate = formattedStartDate;
+      dataAfterFilter[i].endDate = formattedEndDate;
+      // dataAfterFilter[i].startDate = new Date(
+      //   dataAfterFilter[i].startDate
+      // ).toLocaleDateString();
+      // dataAfterFilter[i].endDate = new Date(
+      //   dataAfterFilter[i].endDate
+      // ).toLocaleDateString();
+    }
     setSearchResult(dataAfterFilter);
   }, [searchInput, projectState]);
   const openInPopup = (item) => {
