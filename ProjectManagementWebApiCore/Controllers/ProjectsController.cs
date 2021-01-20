@@ -24,6 +24,7 @@ namespace ProjectManagementWebApiCore.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblProject>>> GetTblProject()
         {
+            var projectSkillData = _context.TblProjectTech.ToList();
             return await _context.TblProject.ToListAsync();
         }
 

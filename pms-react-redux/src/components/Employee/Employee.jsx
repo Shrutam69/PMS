@@ -20,9 +20,11 @@ import EmployeeForm from './EmployeeForm';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import { useToasts } from 'react-toast-notifications';
 import moment from 'moment';
+import * as skillsactions from '../../actions/skills';
 
 const Employee = () => {
   const { addToast } = useToasts();
+  const dispatch = useDispatch();
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState({});
   const [currentId, setCurrentId] = useState(0);
@@ -32,14 +34,20 @@ const Employee = () => {
     title: '',
     subTitle: '',
   });
-  const employeeState = useSelector((state) => state.employeeReducer.list);
-  const dispatch = useDispatch();
+  const getSkillsList = () => {
+    dispatch(skillsactions.fetchAll());
+  };
+  useEffect(() => {
+    getSkillsList();
+  }, []);
+  const skillsState = useSelector((state) => state.skillsReducer.list);
   const getEmployeeList = () => {
     dispatch(actions.fetchAll());
   };
   useEffect(() => {
     getEmployeeList();
-  }, [employeeState]);
+  }, []);
+  const employeeState = useSelector((state) => state.employeeReducer.list);
   const [searchResult, setSearchResult] = useState([...employeeState]);
   useEffect(() => {
     let dataAfterFilter = searchInput
@@ -79,6 +87,7 @@ const Employee = () => {
         addToast('Deleted Successfully', { appearance: 'info' })
       )
     );
+    getEmployeeList();
     setSearchResult(employeeState);
   };
   const actionColumn = {
@@ -90,7 +99,6 @@ const Employee = () => {
         <Button
           onClick={() => {
             openInPopup(employee);
-            // setRecordForEdit(employee);
           }}
         >
           <EditIcon color="primary" />
@@ -187,6 +195,7 @@ const Employee = () => {
           setOpenPopup={setOpenPopup}
           currentId={currentId}
           setCurrentId={setCurrentId}
+          skillsState={skillsState}
         />
       </Popup>
       <ConfirmDialog

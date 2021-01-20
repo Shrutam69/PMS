@@ -24,6 +24,7 @@ namespace ProjectManagementWebApiCore.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TblEmployee>>> GetTblEmployee()
         {
+            var empskillData = _context.TblEmployeeSkill.ToList();
             return await _context.TblEmployee.ToListAsync();
         }
 
@@ -37,7 +38,6 @@ namespace ProjectManagementWebApiCore.Controllers
             {
                 return NotFound();
             }
-
             return tblEmployee;
         }
 

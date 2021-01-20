@@ -20,6 +20,7 @@ import ProjectForm from './ProjectForm';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import { useToasts } from 'react-toast-notifications';
 import moment from 'moment';
+import * as skillsactions from '../../actions/skills';
 
 const Project = (props) => {
   const { addToast } = useToasts();
@@ -33,13 +34,21 @@ const Project = (props) => {
   });
 
   const dispatch = useDispatch();
-  const projectState = useSelector((state) => state.projectReducer.list);
+  const getSkillsList = () => {
+    dispatch(skillsactions.fetchAll());
+  };
+  useEffect(() => {
+    getSkillsList();
+  }, []);
+  const skillsState = useSelector((state) => state.skillsReducer.list);
   const getProjectList = () => {
     dispatch(actions.fetchAll());
   };
   useEffect(() => {
     getProjectList();
   }, []);
+  const projectState = useSelector((state) => state.projectReducer.list);
+
   const [searchResult, setSearchResult] = useState([...projectState]);
   useEffect(() => {
     setSearchResult([...projectState]);
@@ -189,6 +198,7 @@ const Project = (props) => {
           recordForEdit={recordForEdit}
           openPopup={openPopup}
           setOpenPopup={setOpenPopup}
+          skillsState={skillsState}
         />
       </Popup>
       <ConfirmDialog

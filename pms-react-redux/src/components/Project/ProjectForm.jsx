@@ -6,27 +6,17 @@ import { Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import '../Employee/employee.css';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Multiselect } from 'multiselect-react-dropdown';
 import * as actions from '../../actions/project';
-import * as skillsactions from '../../actions/skills';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { useToasts } from 'react-toast-notifications';
 
 const ProjectForm = (props) => {
   const { addToast } = useToasts();
-  const { recordForEdit, setOpenPopup } = props;
-  console.log('recordForEdit', recordForEdit);
-  const skillsState = useSelector((state) => state.skillsReducer.list);
+  const { recordForEdit, setOpenPopup, skillsState } = props;
   const dispatch = useDispatch();
-  const getSkillsList = () => {
-    dispatch(skillsactions.fetchAll());
-  };
-  useEffect(() => {
-    getSkillsList();
-  }, []);
+
   const skilllist = skillsState.map((data, index) => {
     return { value: data.id, label: data.name };
   });
@@ -35,17 +25,24 @@ const ProjectForm = (props) => {
     id: recordForEdit ? recordForEdit.id : 0,
     name: recordForEdit ? recordForEdit.name : '',
     code: recordForEdit ? recordForEdit.code : '',
-    // startDate: recordForEdit ? new Date(newStartDate) : new Date(),
     startDate: recordForEdit
       ? new Date(Date.parse(recordForEdit.startDate))
       : new Date(),
     endDate: recordForEdit
       ? new Date(Date.parse(recordForEdit.endDate))
       : new Date(),
-    SelectedSkillList: [],
+    SelectedSkillList: recordForEdit
+      ? recordForEdit.tblProjectTech.map((data) => {
+          let newId = data.skillId;
+          const record = skillsState.filter((x) => x.id == newId);
+          return {
+            value: data.skillId,
+            label: record[0]?.name,
+          };
+        })
+      : [],
   };
   const [values, setValues] = useState(initialFieldValues);
-  // const [data, setData] = useState([recordForEdit]);
   //Validation
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -55,12 +52,6 @@ const ProjectForm = (props) => {
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
   });
-  // useEffect(() => {
-  //   if (recordForEdit != null)
-  //     setValues({
-  //       ...data,
-  //     });
-  // }, [recordForEdit]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -176,10 +167,11 @@ const ProjectForm = (props) => {
                         //     : 'field basic-multi-select'
                         // }
                         classNamePrefix="select"
-                        // onSelect={onSelect}
                         onRemove={onRemove}
                         onChange={onSelect}
-                        // value={values.SelectedSkillList}
+                        defaultValue={
+                          recordForEdit ? values.SelectedSkillList : ''
+                        }
                       />
                     </div>
                   </div>
@@ -197,7 +189,6 @@ const ProjectForm = (props) => {
                             : 'field'
                         }
                         value={values?.startDate}
-                        // onChange={(date) => setStartDate(date)}
                       />
                     </div>
                   </div>
@@ -211,7 +202,6 @@ const ProjectForm = (props) => {
                         name="endDate"
                         className="field"
                         value={values?.endDate}
-                        // onChange={(date) => setReleaseDate(date)}
                       />
                     </div>
                   </div>
@@ -235,7 +225,6 @@ const ProjectForm = (props) => {
                       style={{ padding: '6px 12px' }}
                       onClick={() => {
                         setOpenPopup(false);
-                        // setRecordForEdit(null);
                       }}
                     >
                       Cancel

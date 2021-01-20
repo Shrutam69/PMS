@@ -8,7 +8,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import './employee.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import * as actions from '../../actions/employee';
-import * as skillsactions from '../../actions/skills';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { useToasts } from 'react-toast-notifications';
@@ -16,40 +15,33 @@ import moment from 'moment';
 
 const EmployeeForm = (props) => {
   const { addToast } = useToasts();
-  const { recordForEdit, setOpenPopup } = props;
-  console.log('recordForEdit', recordForEdit);
-
-  const skillsState = useSelector((state) => state.skillsReducer.list);
-  const getSkillsList = () => {
-    dispatch(skillsactions.fetchAll());
-  };
-
-  useEffect(() => {
-    getSkillsList();
-  }, []);
+  const { recordForEdit, setOpenPopup, skillsState } = props;
 
   const skilllist = skillsState.map((data, index) => {
     return { value: data.id, label: data.name };
   });
+
   const dispatch = useDispatch();
-  // let newStartDate = recordForEdit
-  //   ? moment(recordForEdit.startDate).format('DD/MM/YYYY')
-  //   : new Date();
-  // let newReleaseDate = recordForEdit
-  //   ? moment(recordForEdit.releaseDate).format('DD/MM/YYYY')
-  //   : new Date();
   const initialFieldValues = {
     id: recordForEdit ? recordForEdit.id : 0,
     name: recordForEdit ? recordForEdit.name : '',
     code: recordForEdit ? recordForEdit.code : '',
-    // startDate: recordForEdit ? new Date(newStartDate) : new Date(),
     startDate: recordForEdit
       ? new Date(Date.parse(recordForEdit.startDate))
       : new Date(),
     releaseDate: recordForEdit
       ? new Date(Date.parse(recordForEdit.releaseDate))
       : new Date(),
-    SelectedSkillList: [],
+    SelectedSkillList: recordForEdit
+      ? recordForEdit.tblEmployeeSkill.map((data) => {
+          let newId = data.skillId;
+          const record = skillsState.filter((x) => x.id == newId);
+          return {
+            value: data.skillId,
+            label: record[0]?.name,
+          };
+        })
+      : [],
   };
   const [values, setValues] = useState(initialFieldValues);
 
@@ -179,13 +171,13 @@ const EmployeeForm = (props) => {
                         // isOptionSelected={
                         //   options.value === values?.SelectedSkillList.skillId
                         // }
-                        isOptionSelected={skilllist}
-                        isOptionSelected={[1]}
+                        defaultValue={
+                          recordForEdit ? values.SelectedSkillList : ''
+                        }
                         classNamePrefix="select"
                         // onSelect={onSelect}
                         onRemove={onRemove}
                         onChange={onSelect}
-                        // value={values.skilllist}
                       />
                     </div>
                   </div>
@@ -204,7 +196,6 @@ const EmployeeForm = (props) => {
                         }
                         value={values?.startDate}
                         minDate={recordForEdit ? '' : new Date()}
-                        // onChange={(date) => setStartDate(date)}
                       />
                     </div>
                   </div>
@@ -223,7 +214,6 @@ const EmployeeForm = (props) => {
                         }
                         value={values?.releaseDate}
                         minDate={recordForEdit ? values?.startDate : new Date()}
-                        // onChange={(date) => setReleaseDate(date)}
                       />
                     </div>
                   </div>
@@ -247,7 +237,6 @@ const EmployeeForm = (props) => {
                       style={{ padding: '6px 12px' }}
                       onClick={() => {
                         setOpenPopup(false);
-                        // setRecordForEdit(null);
                       }}
                     >
                       Cancel
