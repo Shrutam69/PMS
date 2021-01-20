@@ -179,11 +179,13 @@ const EmployeeForm = (props) => {
                         // isOptionSelected={
                         //   options.value === values?.SelectedSkillList.skillId
                         // }
+                        isOptionSelected={skilllist}
+                        isOptionSelected={[1]}
                         classNamePrefix="select"
                         // onSelect={onSelect}
                         onRemove={onRemove}
                         onChange={onSelect}
-                        // value={values?.SelectedSkillList}
+                        // value={values.skilllist}
                       />
                     </div>
                   </div>

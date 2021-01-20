@@ -11,6 +11,5 @@ namespace ProjectManagementWebApiCore.CustomModels
         public int EmployeeId { get; set; }
         public int ProjectId { get; set; }
         public IEnumerable<TblProject> ProjectCollection { get; set; }
-
     }
 }

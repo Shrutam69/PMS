@@ -42,34 +42,33 @@ namespace ProjectManagementWebApiCore.Controllers
         }
 
         // PUT: api/Employees/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTblEmployee(int id, TblEmployee tblEmployee)
-        {
-            //if (id != tblEmployee.Id)
-            //{
-            //    return BadRequest();
-            //}
-            tblEmployee.Id = id;
-            _context.Entry(tblEmployee).State = EntityState.Modified;
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutTblEmployee(int id, TblEmployee tblEmployee)
+        //{
+        //    //if (id != tblEmployee.Id)
+        //    //{
+        //    //    return BadRequest();
+        //    //}
+        //    tblEmployee.Id = id;
+        //    _context.Entry(tblEmployee).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TblEmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!TblEmployeeExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+        //    return NoContent();
+        //}
 
         // POST: api/Employees
         //[HttpPost]
@@ -173,74 +172,81 @@ namespace ProjectManagementWebApiCore.Controllers
             return CreatedAtAction("GetTblEmployee", new { id = manageEmployee.Id }, manageEmployee);
         }
 
-        // PUT: api/Employees/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutEmployee(int id, ManageEmployee manageEmployee, [FromForm]TblEmployee tblEmployee)
-        //{
-        //    var empId = id;
-        //    var initialId = 0;
-        //    //var tblEmployee = await _context.TblEmployee.FindAsync(id);
-        //    if (id != empId)
-        //    {
-        //        return BadRequest();
-        //    }
+        //PUT: api/Employees/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutEmployee(int id, ManageEmployee manageEmployee)
+        {
+            TblEmployee tblEmployee = new TblEmployee()
+            {
+                Id = id,
+                Code = manageEmployee.Code,
+                Name = manageEmployee.Name,
+                StartDate = manageEmployee.StartDate,
+                ReleaseDate = manageEmployee.ReleaseDate
+            };
+            _context.Entry(tblEmployee).State = EntityState.Modified;
+            var empId = id;
+            var initialId = 0;
+            //var tblEmployee = await _context.TblEmployee.FindAsync(id);
+            if (id != empId)
+            {
+                return BadRequest();
+            }
+            //_context.Entry(manageEmployee).State = EntityState.Modified;
+            var tempId = (from p in _context.TblEmployeeSkill
+                          orderby p.Id descending
+                          select p.Id).Take(1).SingleOrDefault();
+            if (tempId == null)
+            {
+                initialId = 0;
+            }
+            else
+            {
+                initialId = tempId.Value;
+            }
+            _context.TblEmployeeSkill.RemoveRange(_context.TblEmployeeSkill.Where(x => x.EmployeeId == id));
+            _context.SaveChanges();
+            var empSkillId = initialId;
+            TblEmployeeSkill empSkill = new TblEmployeeSkill();
+            var skillcount = manageEmployee.SelectedSkillList;
+            for (int i = 0; i < skillcount.Count(); i++)
+            {
+                empSkillId++;
+                empSkill.Id = empSkillId;
+                empSkill.EmployeeId = id;
+                empSkill.SkillId = Convert.ToInt32(skillcount.ElementAt(i));
+                _context.TblEmployeeSkill.Add(empSkill);
+                await _context.SaveChangesAsync();
+            };
+            try
+            {
+                await _context.SaveChangesAsync();
 
-        //    _context.Entry(tblEmployee).State = EntityState.Modified;
-        //    var tempId = (from p in _context.TblEmployeeSkill
-        //              orderby p.Id descending
-        //              select p.Id).Take(1).SingleOrDefault();
-        //    if (tempId == null)
-        //    {
-        //        initialId = 0;
-        //    }
-        //    else
-        //    {
-        //        initialId = tempId.Value;
-        //    }
-        //    _context.TblEmployeeSkill.RemoveRange(_context.TblEmployeeSkill.Where(x => x.EmployeeId == id));
-        //    _context.SaveChanges();
-        //    var empSkillId = initialId;
-        //    TblEmployeeSkill empSkill = new TblEmployeeSkill();
-        //    var skillcount = manageEmployee.SelectedSkillList;
-        //    for (int i = 0; i < skillcount.Count(); i++)
-        //    {
-        //        empSkillId++;
-        //        empSkill.Id = empSkillId;
-        //        empSkill.EmployeeId = id;
-        //        empSkill.SkillId = Convert.ToInt32(skillcount.ElementAt(i));
-        //        _context.TblEmployeeSkill.Add(empSkill);
-        //        await _context.SaveChangesAsync();
-        //    };
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-               
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TblEmployeeExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TblEmployeeExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         // DELETE: api/Employees/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<TblEmployee>> DeleteManageEmployee(int id)
         {
             var tblEmployee = await _context.TblEmployee.FindAsync(id);
-            var data = _context.TblEmployeeSkill.Where(a => a.EmployeeId == id).ToList();
-             _context.TblEmployeeSkill.RemoveRange(data);
-             _context.SaveChanges();
-             _context.TblAssign.RemoveRange(_context.TblAssign.Where(a => a.EmployeeId == id));
-             _context.SaveChanges();
+            _context.TblEmployeeSkill.RemoveRange(_context.TblEmployeeSkill.Where(x => x.EmployeeId == id));
+            _context.SaveChanges();
+             //_context.TblAssign.RemoveRange(_context.TblAssign.Where(a => a.EmployeeId == id));
+             //_context.SaveChanges();
             if (tblEmployee == null)
             {
                 return NotFound();
