@@ -17,13 +17,8 @@ import { useToasts } from 'react-toast-notifications';
 
 const ProjectForm = (props) => {
   const { addToast } = useToasts();
-  const {
-    addOrEdit,
-    recordForEdit,
-    openPopup,
-    setOpenPopup,
-    setRecordForEdit,
-  } = props;
+  const { recordForEdit, setOpenPopup } = props;
+  console.log('recordForEdit', recordForEdit);
   const skillsState = useSelector((state) => state.skillsReducer.list);
   const dispatch = useDispatch();
   const getSkillsList = () => {
@@ -37,17 +32,20 @@ const ProjectForm = (props) => {
   });
 
   const initialFieldValues = {
-    id: 0,
-    name: '',
-    code: '',
-    startDate: new Date(),
-    endDate: new Date(),
+    id: recordForEdit ? recordForEdit.id : 0,
+    name: recordForEdit ? recordForEdit.name : '',
+    code: recordForEdit ? recordForEdit.code : '',
+    // startDate: recordForEdit ? new Date(newStartDate) : new Date(),
+    startDate: recordForEdit
+      ? new Date(Date.parse(recordForEdit.startDate))
+      : new Date(),
+    endDate: recordForEdit
+      ? new Date(Date.parse(recordForEdit.endDate))
+      : new Date(),
     SelectedSkillList: [],
   };
-  const [values, setValues] = useState(
-    recordForEdit ? recordForEdit : initialFieldValues
-  );
-  const [data, setData] = useState([recordForEdit]);
+  const [values, setValues] = useState(initialFieldValues);
+  // const [data, setData] = useState([recordForEdit]);
   //Validation
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -57,13 +55,12 @@ const ProjectForm = (props) => {
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
   });
-  useEffect(() => {
-    debugger;
-    if (recordForEdit != null)
-      setValues({
-        ...data,
-      });
-  }, [recordForEdit]);
+  // useEffect(() => {
+  //   if (recordForEdit != null)
+  //     setValues({
+  //       ...data,
+  //     });
+  // }, [recordForEdit]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -90,7 +87,6 @@ const ProjectForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
-    debugger;
     if (recordForEdit == null) {
       dispatch(
         actions.create(

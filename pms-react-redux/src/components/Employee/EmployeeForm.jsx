@@ -15,9 +15,10 @@ import { useToasts } from 'react-toast-notifications';
 import moment from 'moment';
 
 const EmployeeForm = (props) => {
-  debugger;
   const { addToast } = useToasts();
   const { recordForEdit, setOpenPopup } = props;
+  console.log('recordForEdit', recordForEdit);
+
   const skillsState = useSelector((state) => state.skillsReducer.list);
   const getSkillsList = () => {
     dispatch(skillsactions.fetchAll());
@@ -63,7 +64,6 @@ const EmployeeForm = (props) => {
   });
 
   const handleInputChange = (e) => {
-    debugger;
     const { name, value } = e.target;
     setValues({
       ...values,

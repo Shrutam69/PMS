@@ -47,7 +47,7 @@ const Employee = () => {
           x.name.toLowerCase().includes(searchInput.toLowerCase())
         )
       : employeeState;
-    for (let i = 0; i < employeeState.length; i++) {
+    for (let i = 0; i < dataAfterFilter.length; i++) {
       // let formattedStartDate = moment(dataAfterFilter[i].startDate).format(
       //   'DD/MM/YYYY'
       // );

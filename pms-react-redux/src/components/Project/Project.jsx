@@ -51,20 +51,20 @@ const Project = (props) => {
         )
       : projectState;
     for (let i = 0; i < dataAfterFilter.length; i++) {
-      let formattedStartDate = moment(dataAfterFilter[i].startDate).format(
-        'DD-MM-YYYY'
-      );
-      let formattedEndDate = moment(dataAfterFilter[i].startDate).format(
-        'DD-MM-YYYY'
-      );
-      dataAfterFilter[i].startDate = formattedStartDate;
-      dataAfterFilter[i].endDate = formattedEndDate;
-      // dataAfterFilter[i].startDate = new Date(
-      //   dataAfterFilter[i].startDate
-      // ).toLocaleDateString();
-      // dataAfterFilter[i].endDate = new Date(
-      //   dataAfterFilter[i].endDate
-      // ).toLocaleDateString();
+      // let formattedStartDate = moment(dataAfterFilter[i].startDate).format(
+      //   'DD-MM-YYYY'
+      // );
+      // let formattedEndDate = moment(dataAfterFilter[i].startDate).format(
+      //   'DD-MM-YYYY'
+      // );
+      // dataAfterFilter[i].startDate = formattedStartDate;
+      // dataAfterFilter[i].endDate = formattedEndDate;
+      dataAfterFilter[i].startDate = new Date(
+        dataAfterFilter[i].startDate
+      ).toLocaleDateString();
+      dataAfterFilter[i].endDate = new Date(
+        dataAfterFilter[i].endDate
+      ).toLocaleDateString();
     }
     setSearchResult(dataAfterFilter);
   }, [searchInput, projectState]);
