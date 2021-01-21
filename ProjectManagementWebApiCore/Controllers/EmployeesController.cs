@@ -25,6 +25,7 @@ namespace ProjectManagementWebApiCore.Controllers
         public async Task<ActionResult<IEnumerable<TblEmployee>>> GetTblEmployee()
         {
             var empskillData = _context.TblEmployeeSkill.ToList();
+            var assignedProject = _context.TblAssignProject.ToList();
             return await _context.TblEmployee.ToListAsync();
         }
 
@@ -245,8 +246,8 @@ namespace ProjectManagementWebApiCore.Controllers
             var tblEmployee = await _context.TblEmployee.FindAsync(id);
             _context.TblEmployeeSkill.RemoveRange(_context.TblEmployeeSkill.Where(x => x.EmployeeId == id));
             _context.SaveChanges();
-             //_context.TblAssign.RemoveRange(_context.TblAssign.Where(a => a.EmployeeId == id));
-             //_context.SaveChanges();
+            _context.TblAssignProject.RemoveRange(_context.TblAssignProject.Where(a => a.EmployeeId == id));
+            _context.SaveChanges();
             if (tblEmployee == null)
             {
                 return NotFound();

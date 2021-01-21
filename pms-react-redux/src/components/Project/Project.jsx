@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch, connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Table } from 'antd';
 import {
   ButtonGroup,
@@ -7,25 +7,30 @@ import {
   Toolbar,
   TextField,
   InputAdornment,
+  Tooltip,
+  IconButton,
 } from '@material-ui/core';
-import { tableHeadersProject, tableHeaders } from '../../utils/data';
+import { tableHeadersProject } from '../../utils/data';
 import * as actions from '../../actions/project';
+import * as employeeActions from '../../actions/employee';
+import * as skillsactions from '../../actions/skills';
 import { UserAddOutlined } from '@ant-design/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import '../Employee/employee.css';
 import Search from '@material-ui/icons/Search';
 import Popup from '../Shared/Popup';
 import ProjectForm from './ProjectForm';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import { useToasts } from 'react-toast-notifications';
-import moment from 'moment';
-import * as skillsactions from '../../actions/skills';
+import ViewListIcon from '@material-ui/icons/ViewList';
+import AssignEmployeeToProject from './AssignEmployeeToProject';
+import '../Employee/employee.css';
 
 const Project = (props) => {
   const { addToast } = useToasts();
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
+  const [assignEmployee, setAssignEmployee] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
@@ -34,6 +39,13 @@ const Project = (props) => {
   });
 
   const dispatch = useDispatch();
+  const getEmployeeList = () => {
+    dispatch(employeeActions.fetchAll());
+  };
+  useEffect(() => {
+    getEmployeeList();
+  }, []);
+  const employeeState = useSelector((state) => state.employeeReducer.list);
   const getSkillsList = () => {
     dispatch(skillsactions.fetchAll());
   };
@@ -60,14 +72,6 @@ const Project = (props) => {
         )
       : projectState;
     for (let i = 0; i < dataAfterFilter.length; i++) {
-      // let formattedStartDate = moment(dataAfterFilter[i].startDate).format(
-      //   'DD-MM-YYYY'
-      // );
-      // let formattedEndDate = moment(dataAfterFilter[i].startDate).format(
-      //   'DD-MM-YYYY'
-      // );
-      // dataAfterFilter[i].startDate = formattedStartDate;
-      // dataAfterFilter[i].endDate = formattedEndDate;
       dataAfterFilter[i].startDate = new Date(
         dataAfterFilter[i].startDate
       ).toLocaleDateString();
@@ -98,28 +102,45 @@ const Project = (props) => {
     key: 'actions',
     render: (project) => (
       <ButtonGroup variant="text">
-        <Button
-          onClick={() => {
-            // setOpenPopup(true);
-            openInPopup(project);
-          }}
-        >
-          <EditIcon color="primary" />
-        </Button>
-        <Button
-          onClick={() => {
-            setConfirmDialog({
-              isOpen: true,
-              title: 'Are you sure to delete project?',
-              subTitle: "You can't undo this operation",
-              onConfirm: () => {
-                onDelete(project.id);
-              },
-            });
-          }}
-        >
-          <DeleteIcon color="secondary" />
-        </Button>
+        <Tooltip title="Edit">
+          <IconButton
+            aria-label="edit"
+            onClick={() => {
+              setAssignEmployee(false);
+              openInPopup(project);
+            }}
+          >
+            <EditIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton aria-label="delete">
+            <DeleteIcon
+              color="secondary"
+              onClick={() => {
+                setConfirmDialog({
+                  isOpen: true,
+                  title: 'Are you sure to delete project?',
+                  subTitle: "You can't undo this operation",
+                  onConfirm: () => {
+                    onDelete(project.id);
+                  },
+                });
+              }}
+            />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="View Projects">
+          <IconButton aria-label="viewProjects">
+            <ViewListIcon
+              color="primary"
+              onClick={() => {
+                setAssignEmployee(true);
+                openInPopup(project);
+              }}
+            />
+          </IconButton>
+        </Tooltip>
       </ButtonGroup>
     ),
   };
@@ -190,16 +211,25 @@ const Project = (props) => {
       </div>
 
       <Popup
-        title="Project Form"
+        title={assignEmployee ? 'Assign Employee' : 'Project Form'}
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <ProjectForm
-          recordForEdit={recordForEdit}
-          openPopup={openPopup}
-          setOpenPopup={setOpenPopup}
-          skillsState={skillsState}
-        />
+        {assignEmployee ? (
+          <AssignEmployeeToProject
+            recordForEdit={recordForEdit}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+            employeeState={employeeState}
+          />
+        ) : (
+          <ProjectForm
+            recordForEdit={recordForEdit}
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+            skillsState={skillsState}
+          />
+        )}
       </Popup>
       <ConfirmDialog
         confirmDialog={confirmDialog}

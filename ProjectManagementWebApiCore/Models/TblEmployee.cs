@@ -7,6 +7,7 @@ namespace ProjectManagementWebApiCore.Models
     {
         public TblEmployee()
         {
+            TblAssignProject = new HashSet<TblAssignProject>();
             TblEmployeeSkill = new HashSet<TblEmployeeSkill>();
         }
 
@@ -16,6 +17,7 @@ namespace ProjectManagementWebApiCore.Models
         public DateTime? StartDate { get; set; }
         public DateTime? ReleaseDate { get; set; }
 
+        public virtual ICollection<TblAssignProject> TblAssignProject { get; set; }
         public virtual ICollection<TblEmployeeSkill> TblEmployeeSkill { get; set; }
     }
 }

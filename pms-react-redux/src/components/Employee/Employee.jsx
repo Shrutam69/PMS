@@ -7,9 +7,12 @@ import {
   Toolbar,
   TextField,
   InputAdornment,
+  Tooltip,
+  IconButton,
 } from '@material-ui/core';
 import { tableHeaders } from '../../utils/data';
 import * as actions from '../../actions/employee';
+import * as projectActions from '../../actions/project';
 import { UserAddOutlined } from '@ant-design/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -19,21 +22,29 @@ import Popup from '../Shared/Popup';
 import EmployeeForm from './EmployeeForm';
 import ConfirmDialog from '../Shared/ConfirmDialog';
 import { useToasts } from 'react-toast-notifications';
-import moment from 'moment';
 import * as skillsactions from '../../actions/skills';
+import AssignProjectToEmployee from './AssignProjectToEmployee';
+import ViewListIcon from '@material-ui/icons/ViewList';
 
 const Employee = () => {
   const { addToast } = useToasts();
   const dispatch = useDispatch();
   const [openPopup, setOpenPopup] = useState(false);
+  const [assignPopup, setassignPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState({});
-  const [currentId, setCurrentId] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [confirmDialog, setConfirmDialog] = useState({
     isOpen: false,
     title: '',
     subTitle: '',
   });
+  const getProjectList = () => {
+    dispatch(projectActions.fetchAll());
+  };
+  useEffect(() => {
+    getProjectList();
+  }, []);
+  const projectState = useSelector((state) => state.projectReducer.list);
   const getSkillsList = () => {
     dispatch(skillsactions.fetchAll());
   };
@@ -56,14 +67,6 @@ const Employee = () => {
         )
       : employeeState;
     for (let i = 0; i < dataAfterFilter.length; i++) {
-      // let formattedStartDate = moment(dataAfterFilter[i].startDate).format(
-      //   'DD/MM/YYYY'
-      // );
-      // let formattedReleaseDate = moment(dataAfterFilter[i].releaseDate).format(
-      //   'DD/MM/YYYY'
-      // );
-      // dataAfterFilter[i].startDate = formattedStartDate;
-      // dataAfterFilter[i].releaseDate = formattedReleaseDate;
       dataAfterFilter[i].startDate = new Date(
         dataAfterFilter[i].startDate
       ).toLocaleDateString();
@@ -96,27 +99,45 @@ const Employee = () => {
     key: 'actions',
     render: (employee) => (
       <ButtonGroup variant="text">
-        <Button
-          onClick={() => {
-            openInPopup(employee);
-          }}
-        >
-          <EditIcon color="primary" />
-        </Button>
-        <Button
-          onClick={() => {
-            setConfirmDialog({
-              isOpen: true,
-              title: 'Are you sure to delete employee?',
-              subTitle: "You can't undo this operation",
-              onConfirm: () => {
-                onDelete(employee.id);
-              },
-            });
-          }}
-        >
-          <DeleteIcon color="secondary" />
-        </Button>
+        <Tooltip title="Edit">
+          <IconButton
+            aria-label="edit"
+            onClick={() => {
+              setassignPopup(false);
+              openInPopup(employee);
+            }}
+          >
+            <EditIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton aria-label="delete">
+            <DeleteIcon
+              color="secondary"
+              onClick={() => {
+                setConfirmDialog({
+                  isOpen: true,
+                  title: 'Are you sure to delete employee?',
+                  subTitle: "You can't undo this operation",
+                  onConfirm: () => {
+                    onDelete(employee.id);
+                  },
+                });
+              }}
+            />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="View Projects">
+          <IconButton aria-label="viewProjects">
+            <ViewListIcon
+              color="primary"
+              onClick={() => {
+                setassignPopup(true);
+                openInPopup(employee);
+              }}
+            />
+          </IconButton>
+        </Tooltip>
       </ButtonGroup>
     ),
   };
@@ -186,17 +207,28 @@ const Employee = () => {
         />
       </div>
       <Popup
-        title="Employee Form"
+        title={assignPopup ? 'Assign Project' : 'Employee Form'}
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <EmployeeForm
-          recordForEdit={recordForEdit}
-          setOpenPopup={setOpenPopup}
-          currentId={currentId}
-          setCurrentId={setCurrentId}
-          skillsState={skillsState}
-        />
+        {assignPopup ? (
+          <div>
+            <AssignProjectToEmployee
+              recordForEdit={recordForEdit}
+              setOpenPopup={setOpenPopup}
+              skillsState={skillsState}
+              projectState={projectState}
+            />
+          </div>
+        ) : (
+          <div>
+            <EmployeeForm
+              recordForEdit={recordForEdit}
+              setOpenPopup={setOpenPopup}
+              skillsState={skillsState}
+            />
+          </div>
+        )}
       </Popup>
       <ConfirmDialog
         confirmDialog={confirmDialog}

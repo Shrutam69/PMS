@@ -66,3 +66,14 @@ export const tableHeaders = [
     },
   },
 ];
+
+export const tableHeadersAssignProject = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    sorter: (a, b) => {
+      return a.name.localeCompare(b.name);
+    },
+  },
+];

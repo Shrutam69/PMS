@@ -25,6 +25,7 @@ namespace ProjectManagementWebApiCore.Controllers
         public async Task<ActionResult<IEnumerable<TblProject>>> GetTblProject()
         {
             var projectSkillData = _context.TblProjectTech.ToList();
+            var assignedProjects = _context.TblAssignProject.ToList();
             return await _context.TblProject.ToListAsync();
         }
 
@@ -215,9 +216,8 @@ namespace ProjectManagementWebApiCore.Controllers
         {
             _context.TblProjectTech.RemoveRange(_context.TblProjectTech.Where(a => a.ProjectId == id));
             _context.SaveChanges();
-
-            //_context.TblAssign.RemoveRange(_context.TblAssign.Where(a => a.ProjectId == id));
-            //_context.SaveChanges();
+            _context.TblAssignProject.RemoveRange(_context.TblAssignProject.Where(a => a.ProjectId == id));
+            _context.SaveChanges();
             var tblProject = await _context.TblProject.FindAsync(id);
             if (tblProject == null)
             {

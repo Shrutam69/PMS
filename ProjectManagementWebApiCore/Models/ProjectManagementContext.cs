@@ -15,7 +15,7 @@ namespace ProjectManagementWebApiCore.Models
         {
         }
 
-        public virtual DbSet<TblAssign> TblAssign { get; set; }
+        public virtual DbSet<TblAssignProject> TblAssignProject { get; set; }
         public virtual DbSet<TblEmployee> TblEmployee { get; set; }
         public virtual DbSet<TblEmployeeSkill> TblEmployeeSkill { get; set; }
         public virtual DbSet<TblProject> TblProject { get; set; }
@@ -26,16 +26,25 @@ namespace ProjectManagementWebApiCore.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=PCA196\\SQL2014;Database=ProjectManagement;User ID=sa;Password=shrutatva123");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TblAssign>(entity =>
+            modelBuilder.Entity<TblAssignProject>(entity =>
             {
-                entity.ToTable("tblAssign");
+                entity.ToTable("tblAssignProject");
+
+                entity.HasOne(d => d.Employee)
+                    .WithMany(p => p.TblAssignProject)
+                    .HasForeignKey(d => d.EmployeeId)
+                    .HasConstraintName("FK__tblAssign__Emplo__787EE5A0");
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.TblAssignProject)
+                    .HasForeignKey(d => d.ProjectId)
+                    .HasConstraintName("FK__tblAssign__Proje__797309D9");
             });
 
             modelBuilder.Entity<TblEmployee>(entity =>
