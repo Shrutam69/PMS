@@ -30,7 +30,7 @@ input :focus {
 }
 .err-field {
   width: 100%;
-  height: 34px;
+  height: 40px;
   outline: none;
   border: 1px solid red;
 }
@@ -71,4 +71,7 @@ input::-webkit-inner-spin-button {
   border-color: #dddddd !important;
   box-shadow: none !important;
   border-radius: 0px !important;
+}
+.MuiDialog-paperWidthSm {
+  height: 65%;
 }

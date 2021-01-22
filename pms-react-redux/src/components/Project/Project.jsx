@@ -130,10 +130,10 @@ const Project = (props) => {
             />
           </IconButton>
         </Tooltip>
-        <Tooltip title="View Projects">
-          <IconButton aria-label="viewProjects">
+        <Tooltip title="View Employees">
+          <IconButton aria-label="viewEmployees">
             <ViewListIcon
-              color="primary"
+              color="default"
               onClick={() => {
                 setAssignEmployee(true);
                 openInPopup(project);

@@ -130,7 +130,7 @@ const Employee = () => {
         <Tooltip title="View Projects">
           <IconButton aria-label="viewProjects">
             <ViewListIcon
-              color="primary"
+              color="default"
               onClick={() => {
                 setassignPopup(true);
                 openInPopup(employee);

@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Dashbaord */
+
+.card-header-chart {
+  background-color: #208fc8 !important;
+  font-size: 18px;
+}

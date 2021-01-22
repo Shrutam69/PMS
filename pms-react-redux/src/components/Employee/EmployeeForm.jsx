@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Formik } from 'formik';
+import { Form, Formik, yupToFormErrors } from 'formik';
 import * as Yup from 'yup';
 import FormikControl from '../Shared/FormikControl';
 import { Button } from '@material-ui/core';
@@ -11,7 +11,6 @@ import * as actions from '../../actions/employee';
 import { useSelector, useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { useToasts } from 'react-toast-notifications';
-import moment from 'moment';
 
 const EmployeeForm = (props) => {
   const { addToast } = useToasts();
@@ -53,8 +52,17 @@ const EmployeeForm = (props) => {
       .min(3, 'Mininum 3 characters allowed')
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
+    // SelectedSkillList: Yup.array()
+    //   .min(1, 'Pick at least 1 skill')
+    //   .of(
+    //     Yup.object().shape({
+    //       skilllist: {
+    //         value: Yup.string().required(),
+    //         label: Yup.string().required(),
+    //       },
+    //     })
+    //   ),
   });
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -115,7 +123,7 @@ const EmployeeForm = (props) => {
                   <div className="row">
                     <div className="col-sm-3 d-flex justify-content-sm-start justify-content-md-end pt-1 pr-0">
                       <label>
-                        Name <span className="text-danger">*</span>
+                        Name<span className="text-danger">*</span>
                       </label>
                     </div>
                     <div className="col-sm-9">
@@ -162,20 +170,16 @@ const EmployeeForm = (props) => {
                         isMulti
                         name="SelectedSkillList"
                         options={skilllist}
-                        className="basic-multi-select"
-                        // className={
-                        //   errors.code && touched.code
-                        //     ? 'err-field basic-multi-select'
-                        //     : 'field basic-multi-select'
-                        // }
-                        // isOptionSelected={
-                        //   options.value === values?.SelectedSkillList.skillId
-                        // }
+                        // className="basic-multi-select"
+                        className={
+                          errors.SelectedSkillList && touched.SelectedSkillList
+                            ? 'err-field'
+                            : ''
+                        }
                         defaultValue={
                           recordForEdit ? values.SelectedSkillList : ''
                         }
                         classNamePrefix="select"
-                        // onSelect={onSelect}
                         onRemove={onRemove}
                         onChange={onSelect}
                       />
