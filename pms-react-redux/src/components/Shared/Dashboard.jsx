@@ -1,31 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import * as actions from '../../actions/project';
-import * as actionsEmployee from '../../actions/employee';
-import * as actionsSkills from '../../actions/skills';
-import { Bar, Line, Doughnut } from 'react-chartjs-2';
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-  CardHeader,
-} from '@material-ui/core';
+import { Bar } from 'react-chartjs-2';
+import { Card, CardContent, Typography } from '@material-ui/core';
 import '../../index.css';
 import Select from 'react-select';
-import {
-  yearList,
-  data,
-  dataForSkillwiswProjects,
-  options,
-  optionsForSkillwise,
-} from '../../utils/data';
+import { yearList, data, options, optionsForSkillwise } from '../../utils/data';
 import * as skillsactions from '../../actions/skills';
 import * as employeeSkillactions from '../../actions/employeeSkill';
+import * as projectTechactions from '../../actions/projectTech';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const [filteredEmployeeList, setFilteredEmployeeList] = useState([]);
   // Skills State
   const getSkillsList = () => {
     dispatch(skillsactions.fetchAll());
@@ -46,37 +31,82 @@ const Dashboard = () => {
     (state) => state.employeeSkillReducer.list
   );
 
+  // TechWiseProject State
+  const getTechWiseProjectList = () => {
+    dispatch(projectTechactions.fetchAll());
+  };
+  useEffect(() => {
+    getTechWiseProjectList();
+  }, []);
+  const techWiseProjectState = useSelector(
+    (state) => state.projectTechReducer.list
+  );
+
   const skilllist = skillsState.map((data, index) => {
     return data.name;
   });
-  const skillWiseEmployeeCount = employeeWiseSkillState.filter(
-    (x) => x.skillId == 2
-  );
 
-  // const countResult = () => {
-  let newArray = [...filteredEmployeeList];
+  let skillWiseEmployee = [];
+  let techWiseProjects = [];
   for (let i = 1; i <= skillsState.length + 1; ++i) {
     const skillWiseEmployeeCount = employeeWiseSkillState.filter(
       (x) => x.skillId == i
     );
-    newArray.push(skillWiseEmployeeCount);
+    skillWiseEmployee.push(skillWiseEmployeeCount);
+    const techWiseEmployeeCount = techWiseProjectState.filter(
+      (x) => x.skillId == i
+    );
+    techWiseProjects.push(techWiseEmployeeCount);
   }
-  const finalArray = newArray.map((data, id) => {
+
+  //SkillWiseEmployee
+  const finalSkillWiseEmployyeArray = skillWiseEmployee.map((data, id) => {
     let newCount = data.length;
     return {
-      SkillId: data.map((skilldata) => {
-        return skilldata.skillId;
-      }),
-      // Skill: SkillId.skillId,
       Count: newCount,
     };
   });
-  console.log('newArray', newArray);
-  console.log('finalArray', finalArray);
+  const filteredSkillWiseEmployeeArray = finalSkillWiseEmployyeArray.filter(
+    (x) => x.Count > 0
+  );
 
-  const newData = {
+  //TechWiseProject
+  const finalTechWiseProjectArray = techWiseProjects.map((data, id) => {
+    let newCount = data.length;
+    return {
+      Count: newCount,
+    };
+  });
+  const filteredTechWiseProjectArray = finalTechWiseProjectArray.filter(
+    (x) => x.Count > 0
+  );
+
+  const dataSetsForSkillWiseEmployeeChart = {
     labels: skilllist,
-    datasets: dataForSkillwiswProjects.datasets,
+    datasets: [
+      {
+        label: 'Skillwise Employee',
+        data: filteredSkillWiseEmployeeArray.map((data) => {
+          return data.Count;
+        }),
+        borderColor: 'rgba(255, 206, 86, 0.4)',
+        backgroundColor: 'rgba(255, 206, 86, 0.4)',
+      },
+    ],
+  };
+
+  const dataSetsForTechWiseProjectChart = {
+    labels: skilllist,
+    datasets: [
+      {
+        label: 'TechnologyWise Project',
+        data: filteredTechWiseProjectArray.map((data) => {
+          return data.Count;
+        }),
+        borderColor: 'rgba(255, 206, 86, 0.4)',
+        backgroundColor: 'rgba(255, 206, 86, 0.4)',
+      },
+    ],
   };
   return (
     <>
@@ -136,7 +166,10 @@ const Dashboard = () => {
             </div>
             <CardContent className="pt-0">
               <Typography>
-                <Bar data={newData} options={optionsForSkillwise} />
+                <Bar
+                  data={dataSetsForSkillWiseEmployeeChart}
+                  options={optionsForSkillwise}
+                />
               </Typography>
             </CardContent>
           </Card>
@@ -148,7 +181,10 @@ const Dashboard = () => {
             </div>
             <CardContent className="pt-0">
               <Typography>
-                <Bar data={newData} options={optionsForSkillwise} />
+                <Bar
+                  data={dataSetsForTechWiseProjectChart}
+                  options={optionsForSkillwise}
+                />
               </Typography>
             </CardContent>
           </Card>

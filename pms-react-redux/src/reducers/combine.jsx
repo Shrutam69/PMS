@@ -4,6 +4,7 @@ import { projectReducer } from '../reducers/project';
 import { skillsReducer } from '../reducers/skills';
 import { assignProjectReducer } from '../reducers/assignProject';
 import { employeeSkillReducer } from '../reducers/employeeSkill';
+import { projectTechReducer } from '../reducers/projectTech';
 
 export const reducers = combineReducers({
   employeeReducer,
@@ -11,4 +12,5 @@ export const reducers = combineReducers({
   skillsReducer,
   assignProjectReducer,
   employeeSkillReducer,
+  projectTechReducer,
 });
