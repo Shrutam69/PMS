@@ -11,7 +11,7 @@ export const fetchAll = () => (dispatch) => {
     .actions(PROJECT_TECH_URL)
     .fetchAll()
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_TECHWISE_PROJECT_COUNT,
         payload: response.data,

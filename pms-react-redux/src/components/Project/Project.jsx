@@ -130,7 +130,7 @@ const Project = (props) => {
             />
           </IconButton>
         </Tooltip>
-        <Tooltip title="View Employees">
+        <Tooltip title="Assign Employees">
           <IconButton aria-label="viewEmployees">
             <ViewListIcon
               color="default"

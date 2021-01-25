@@ -72,6 +72,6 @@ input::-webkit-inner-spin-button {
   box-shadow: none !important;
   border-radius: 0px !important;
 }
-.MuiDialog-paperWidthSm {
-  height: 65%;
-}
+/* .MuiDialog-paperWidthSm {
+  height: 43%;
+} */

@@ -52,7 +52,16 @@ const ProjectForm = (props) => {
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
   });
-
+  useEffect(() => {
+    var result = recordForEdit?.tblProjectTech.map((data) => {
+      return data.skillId;
+    });
+    setValues({
+      ...values,
+      SelectedSkillList: result,
+    });
+  }, []);
+  console.log('recordForEdit', recordForEdit);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({

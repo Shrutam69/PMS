@@ -63,6 +63,18 @@ const EmployeeForm = (props) => {
     //     })
     //   ),
   });
+
+  useEffect(() => {
+    var result = recordForEdit?.tblEmployeeSkill.map((data) => {
+      return data.skillId;
+    });
+    setValues({
+      ...values,
+      SelectedSkillList: result,
+    });
+  }, []);
+  console.log('recordForEdit', recordForEdit);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -170,12 +182,12 @@ const EmployeeForm = (props) => {
                         isMulti
                         name="SelectedSkillList"
                         options={skilllist}
-                        // className="basic-multi-select"
-                        className={
-                          errors.SelectedSkillList && touched.SelectedSkillList
-                            ? 'err-field'
-                            : ''
-                        }
+                        className="basic-multi-select"
+                        // className={
+                        //   errors.SelectedSkillList && touched.SelectedSkillList
+                        //     ? 'err-field'
+                        //     : ''
+                        // }
                         defaultValue={
                           recordForEdit ? values.SelectedSkillList : ''
                         }
@@ -199,7 +211,7 @@ const EmployeeForm = (props) => {
                             : 'field'
                         }
                         value={values?.startDate}
-                        minDate={recordForEdit ? '' : new Date()}
+                        // minDate={recordForEdit ? '' : new Date()}
                       />
                     </div>
                   </div>
@@ -217,7 +229,7 @@ const EmployeeForm = (props) => {
                             : 'field'
                         }
                         value={values?.releaseDate}
-                        minDate={recordForEdit ? values?.startDate : new Date()}
+                        // minDate={recordForEdit ? values?.startDate : new Date()}
                       />
                     </div>
                   </div>

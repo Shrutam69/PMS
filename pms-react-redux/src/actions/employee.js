@@ -39,7 +39,7 @@ export const create = (data, onSuccess) => (dispatch) => {
 };
 
 //Update
-export const update = (id, data, onSuccess) => (dispatch) => {
+export const update = (id, data) => (dispatch) => {
   api
     .actions(EMPLOYEE_URL)
     .update(id, data)
@@ -48,7 +48,6 @@ export const update = (id, data, onSuccess) => (dispatch) => {
         type: ACTION_TYPES.UPDATE,
         payload: { id, ...data },
       });
-      onSuccess();
     })
     .catch((error) => console.log(error));
 };

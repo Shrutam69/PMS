@@ -19,13 +19,13 @@ export const projectReducer = (state = initialState, action) => {
       return {
         ...state,
         list: state.list.map((x) =>
-          x.Id === action.payload.id ? action.payload : x
+          x.id === action.payload.id ? action.payload : x
         ),
       };
     case ACTION_TYPES.DELETE_PROJECT:
       return {
         ...state,
-        list: state.list.filter((x) => x.Id !== action.payload),
+        list: state.list.filter((x) => x.id !== action.payload),
       };
 
     default:

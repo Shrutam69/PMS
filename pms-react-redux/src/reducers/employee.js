@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from '../actions/employee.js';
+import { ACTION_TYPES } from '../actions/employee';
 const initialState = {
   list: [],
 };
@@ -19,13 +19,13 @@ export const employeeReducer = (state = initialState, action) => {
       return {
         ...state,
         list: state.list.map((x) =>
-          x.Id === action.payload.id ? action.payload : x
+          x.id === action.payload.id ? action.payload : x
         ),
       };
     case ACTION_TYPES.DELETE:
       return {
         ...state,
-        list: state.list.filter((x) => x.Id !== action.payload),
+        list: state.list.filter((x) => x.id !== action.payload),
       };
     default:
       return state;

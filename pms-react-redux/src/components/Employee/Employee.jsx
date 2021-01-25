@@ -127,7 +127,7 @@ const Employee = () => {
             />
           </IconButton>
         </Tooltip>
-        <Tooltip title="View Projects">
+        <Tooltip title="Assign Projects">
           <IconButton aria-label="viewProjects">
             <ViewListIcon
               color="default"

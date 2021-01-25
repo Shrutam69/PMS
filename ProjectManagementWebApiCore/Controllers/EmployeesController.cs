@@ -179,7 +179,7 @@ namespace ProjectManagementWebApiCore.Controllers
         {
             TblEmployee tblEmployee = new TblEmployee()
             {
-                Id = id,
+                Id = manageEmployee.Id,
                 Code = manageEmployee.Code,
                 Name = manageEmployee.Name,
                 StartDate = manageEmployee.StartDate,
