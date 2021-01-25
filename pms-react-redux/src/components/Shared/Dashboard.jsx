@@ -20,6 +20,7 @@ import moment from 'moment';
 const Dashboard = () => {
   const dispatch = useDispatch();
   const [year, setYear] = useState(2020);
+  const [yearForProject, setYearForProject] = useState(2020);
 
   // Skills State
   const getSkillsList = () => {
@@ -111,7 +112,7 @@ const Dashboard = () => {
   let projectsStarted = [];
   for (let i = 1; i <= projectState.length + 1; ++i) {
     const yearWiseProjectStartedCount = projectState.filter(
-      (x) => moment(x.startDate).format('YYYY') == year
+      (x) => moment(x.startDate).format('YYYY') == yearForProject
     );
     const monthWiseProjectStartedCount = yearWiseProjectStartedCount.filter(
       (x) => moment(x.startDate).format('MM') == i
@@ -122,7 +123,7 @@ const Dashboard = () => {
   let projectEnded = [];
   for (let i = 1; i <= employeeState.length + 1; ++i) {
     const yearWiseProjectEndedCount = projectState.filter(
-      (x) => moment(x.endDate).format('YYYY') == year
+      (x) => moment(x.endDate).format('YYYY') == yearForProject
     );
     const monthWiseProjectEndedCount = yearWiseProjectEndedCount.filter(
       (x) => moment(x.endDate).format('MM') == i
@@ -257,6 +258,10 @@ const Dashboard = () => {
   const handleChange = (selectedOption) => {
     setYear(selectedOption.value);
   };
+  const handleChangeForProject = (selectedOption) => {
+    setYearForProject(selectedOption.value);
+  };
+
   return (
     <>
       <div className="row">
@@ -295,7 +300,7 @@ const Dashboard = () => {
                   options={yearList}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  onChange={handleChange}
+                  onChange={handleChangeForProject}
                   defaultValue={{ value: 2020, label: '2020' }}
                 />
               </div>
