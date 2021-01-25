@@ -38,6 +38,7 @@ const Employee = () => {
     title: '',
     subTitle: '',
   });
+
   const getProjectList = () => {
     dispatch(projectActions.fetchAll());
   };
@@ -231,6 +232,7 @@ const Employee = () => {
               setOpenPopup={setOpenPopup}
               skillsState={skillsState}
               getEmployeeList={getEmployeeList}
+              setRecordForEdit={setRecordForEdit}
             />
           </div>
         )}

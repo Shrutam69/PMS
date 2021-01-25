@@ -14,7 +14,13 @@ import { useToasts } from 'react-toast-notifications';
 
 const EmployeeForm = (props) => {
   const { addToast } = useToasts();
-  const { recordForEdit, setOpenPopup, skillsState, getEmployeeList } = props;
+  const {
+    recordForEdit,
+    setOpenPopup,
+    skillsState,
+    getEmployeeList,
+    setRecordForEdit,
+  } = props;
 
   const skilllist = skillsState.map((data, index) => {
     return { value: data.id, label: data.name };
@@ -95,7 +101,6 @@ const EmployeeForm = (props) => {
           addToast('Employee Added Successfully', { appearance: 'success' })
         )
       );
-      getEmployeeList();
       setOpenPopup(false);
     } else {
       dispatch(
@@ -105,9 +110,10 @@ const EmployeeForm = (props) => {
           addToast('Employee Updated Successfully', { appearance: 'success' })
         )
       );
-      getEmployeeList();
       setOpenPopup(false);
     }
+    setRecordForEdit(null);
+    getEmployeeList();
   };
 
   return (
