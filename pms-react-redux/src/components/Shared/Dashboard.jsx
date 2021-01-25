@@ -20,6 +20,8 @@ import moment from 'moment';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const [year, setYear] = useState(2020);
+
   // Skills State
   const getSkillsList = () => {
     dispatch(skillsactions.fetchAll());
@@ -84,30 +86,43 @@ const Dashboard = () => {
     );
     techWiseProjects.push(techWiseEmployeeCount);
   }
+
   let employeesJoined = [];
   for (let i = 1; i <= employeeState.length + 1; ++i) {
-    const monthWiseEmployeeCount = employeeState.filter(
+    const yearWiseEmployeeCount = employeeState.filter(
+      (x) => moment(x.startDate).format('YYYY') == year
+    );
+    const monthWiseEmployeeCount = yearWiseEmployeeCount.filter(
       (x) => moment(x.startDate).format('MM') == i
     );
     employeesJoined.push(monthWiseEmployeeCount);
   }
   let employeesReleased = [];
   for (let i = 1; i <= employeeState.length + 1; ++i) {
-    const monthWiseEmployeeCount = employeeState.filter(
+    const yearWiseEmployeeCount = employeeState.filter(
+      (x) => moment(x.releaseDate).format('YYYY') == year
+    );
+    const monthWiseEmployeeCount = yearWiseEmployeeCount.filter(
       (x) => moment(x.releaseDate).format('MM') == i
     );
     employeesReleased.push(monthWiseEmployeeCount);
   }
   let projectsStarted = [];
   for (let i = 1; i <= projectState.length + 1; ++i) {
-    const monthWiseProjectStartedCount = projectState.filter(
+    const yearWiseProjectStartedCount = projectState.filter(
+      (x) => moment(x.startDate).format('YYYY') == year
+    );
+    const monthWiseProjectStartedCount = yearWiseProjectStartedCount.filter(
       (x) => moment(x.startDate).format('MM') == i
     );
     projectsStarted.push(monthWiseProjectStartedCount);
   }
   let projectEnded = [];
   for (let i = 1; i <= employeeState.length + 1; ++i) {
-    const monthWiseProjectEndedCount = projectState.filter(
+    const yearWiseProjectEndedCount = projectState.filter(
+      (x) => moment(x.endDate).format('YYYY') == year
+    );
+    const monthWiseProjectEndedCount = yearWiseProjectEndedCount.filter(
       (x) => moment(x.endDate).format('MM') == i
     );
     projectEnded.push(monthWiseProjectEndedCount);
@@ -140,10 +155,7 @@ const Dashboard = () => {
       Count: data.length,
     };
   });
-  console.log(
-    'finalMonthWiseEmployeeJoinedArray',
-    finalMonthWiseEmployeeJoinedArray
-  );
+
   //MonthWiseEmployeeReleased
   const finalMonthWiseEmployeeReleasedArray = employeesReleased.map(
     (data, id) => {
@@ -159,20 +171,14 @@ const Dashboard = () => {
       Count: data.length,
     };
   });
-  console.log(
-    'finalMonthWiseProjectStartedArray',
-    finalMonthWiseProjectStartedArray
-  );
+
   //MonthWiseProjectEnded
   const finalMonthWiseProjectEndedArray = projectEnded.map((data, id) => {
     return {
       Count: data.length,
     };
   });
-  console.log(
-    'finalMonthWiseProjectEndedArray',
-    finalMonthWiseProjectEndedArray
-  );
+
   const dataSetsForSkillWiseEmployeeChart = {
     labels: skilllist,
     datasets: [
@@ -205,7 +211,7 @@ const Dashboard = () => {
     labels: monthList,
     datasets: [
       {
-        label: 'EmployeeJoined',
+        label: 'Employee Joined',
         data: finalMonthWiseEmployeeJoinedArray.map((data) => {
           return data.Count;
         }),
@@ -244,6 +250,10 @@ const Dashboard = () => {
       },
     ],
   };
+
+  const handleChange = (selectedOption) => {
+    setYear(selectedOption.value);
+  };
   return (
     <>
       <div className="row">
@@ -257,9 +267,8 @@ const Dashboard = () => {
                   options={yearList}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  // onRemove={onRemove}
-                  // onChange={onSelect}
-                  defaultValue={{ value: 2021, label: '2021' }}
+                  onChange={handleChange}
+                  defaultValue={{ value: 2020, label: '2020' }}
                 />
               </div>
             </div>
@@ -283,9 +292,8 @@ const Dashboard = () => {
                   options={yearList}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  // onRemove={onRemove}
-                  // onChange={onSelect}
-                  defaultValue={{ value: 2021, label: '2021' }}
+                  onChange={handleChange}
+                  defaultValue={{ value: 2020, label: '2020' }}
                 />
               </div>
             </div>
