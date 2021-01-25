@@ -6,7 +6,6 @@ import '../../index.css';
 import Select from 'react-select';
 import {
   yearList,
-  data,
   options,
   optionsForSkillwise,
   monthList,

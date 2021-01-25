@@ -32,7 +32,7 @@ const ProjectForm = (props) => {
       ? new Date(Date.parse(recordForEdit.endDate))
       : new Date(),
     SelectedSkillList: recordForEdit
-      ? recordForEdit.tblProjectTech.map((data) => {
+      ? recordForEdit.tblProjectTech?.map((data) => {
           let newId = data.skillId;
           const record = skillsState.filter((x) => x.id == newId);
           return {
@@ -53,7 +53,7 @@ const ProjectForm = (props) => {
     code: Yup.string().trim().required('This field is required'),
   });
   useEffect(() => {
-    var result = recordForEdit?.tblProjectTech.map((data) => {
+    var result = recordForEdit?.tblProjectTech?.map((data) => {
       return data.skillId;
     });
     setValues({

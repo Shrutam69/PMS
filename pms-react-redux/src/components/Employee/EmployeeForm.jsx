@@ -14,7 +14,7 @@ import { useToasts } from 'react-toast-notifications';
 
 const EmployeeForm = (props) => {
   const { addToast } = useToasts();
-  const { recordForEdit, setOpenPopup, skillsState } = props;
+  const { recordForEdit, setOpenPopup, skillsState, getEmployeeList } = props;
 
   const skilllist = skillsState.map((data, index) => {
     return { value: data.id, label: data.name };
@@ -32,7 +32,7 @@ const EmployeeForm = (props) => {
       ? new Date(Date.parse(recordForEdit.releaseDate))
       : new Date(),
     SelectedSkillList: recordForEdit
-      ? recordForEdit.tblEmployeeSkill.map((data) => {
+      ? recordForEdit.tblEmployeeSkill?.map((data) => {
           let newId = data.skillId;
           const record = skillsState.filter((x) => x.id == newId);
           return {
@@ -55,7 +55,7 @@ const EmployeeForm = (props) => {
   });
 
   useEffect(() => {
-    var result = recordForEdit?.tblEmployeeSkill.map((data) => {
+    var result = recordForEdit?.tblEmployeeSkill?.map((data) => {
       return data.skillId;
     });
     setValues({
@@ -63,7 +63,6 @@ const EmployeeForm = (props) => {
       SelectedSkillList: result,
     });
   }, []);
-  console.log('recordForEdit', recordForEdit);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -96,6 +95,7 @@ const EmployeeForm = (props) => {
           addToast('Employee Added Successfully', { appearance: 'success' })
         )
       );
+      getEmployeeList();
       setOpenPopup(false);
     } else {
       dispatch(
@@ -105,6 +105,7 @@ const EmployeeForm = (props) => {
           addToast('Employee Updated Successfully', { appearance: 'success' })
         )
       );
+      getEmployeeList();
       setOpenPopup(false);
     }
   };

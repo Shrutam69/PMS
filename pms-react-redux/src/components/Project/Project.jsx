@@ -25,8 +25,9 @@ import { useToasts } from 'react-toast-notifications';
 import ViewListIcon from '@material-ui/icons/ViewList';
 import AssignEmployeeToProject from './AssignEmployeeToProject';
 import '../Employee/employee.css';
+import moment from 'moment';
 
-const Project = (props) => {
+const Project = () => {
   const { addToast } = useToasts();
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);

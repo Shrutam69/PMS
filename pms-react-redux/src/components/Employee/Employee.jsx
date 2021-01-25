@@ -230,6 +230,7 @@ const Employee = () => {
               recordForEdit={recordForEdit}
               setOpenPopup={setOpenPopup}
               skillsState={skillsState}
+              getEmployeeList={getEmployeeList}
             />
           </div>
         )}

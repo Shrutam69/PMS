@@ -103,23 +103,6 @@ export const monthList = [
   'Dec',
 ];
 
-export const data = {
-  labels: monthList,
-  datasets: [
-    {
-      label: 'Employees joined',
-      data: [3, 2, 2, 6, 4, 9, 0, 8, 1, 5, 2, 3],
-      borderColor: 'rgba(255, 206, 86, 1.4)',
-      backgroundColor: 'rgba(255, 206, 86, 0.8)',
-    },
-    {
-      label: 'Employees Realsed',
-      data: [4, 3, 2, 2, 3, 1, 2, 0, 3, 0, 0, 2],
-      borderColor: 'rgba(54, 162, 235, 1.4)',
-      backgroundColor: 'rgba(54, 162, 235,0.8)',
-    },
-  ],
-};
 export const options = {
   title: {
     display: true,
