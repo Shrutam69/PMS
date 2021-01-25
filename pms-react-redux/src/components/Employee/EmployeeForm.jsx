@@ -52,16 +52,6 @@ const EmployeeForm = (props) => {
       .min(3, 'Mininum 3 characters allowed')
       .max(15, 'Maximum 15 characters allowed'),
     code: Yup.string().trim().required('This field is required'),
-    // SelectedSkillList: Yup.array()
-    //   .min(1, 'Pick at least 1 skill')
-    //   .of(
-    //     Yup.object().shape({
-    //       skilllist: {
-    //         value: Yup.string().required(),
-    //         label: Yup.string().required(),
-    //       },
-    //     })
-    //   ),
   });
 
   useEffect(() => {
@@ -183,11 +173,6 @@ const EmployeeForm = (props) => {
                         name="SelectedSkillList"
                         options={skilllist}
                         className="basic-multi-select"
-                        // className={
-                        //   errors.SelectedSkillList && touched.SelectedSkillList
-                        //     ? 'err-field'
-                        //     : ''
-                        // }
                         defaultValue={
                           recordForEdit ? values.SelectedSkillList : ''
                         }

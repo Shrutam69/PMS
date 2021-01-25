@@ -67,8 +67,12 @@ const Project = (props) => {
   }, []);
   useEffect(() => {
     let dataAfterFilter = searchInput
-      ? projectState.filter((x) =>
-          x.name.toLowerCase().includes(searchInput.toLowerCase())
+      ? projectState.filter(
+          (x) =>
+            x.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+            x.code.toLowerCase().includes(searchInput.toLowerCase()) ||
+            x.startDate.toLowerCase().includes(searchInput.toLowerCase()) ||
+            x.endDate.toLowerCase().includes(searchInput.toLowerCase())
         )
       : projectState;
     for (let i = 0; i < dataAfterFilter.length; i++) {
@@ -179,7 +183,7 @@ const Project = (props) => {
             <Toolbar className="mt-1 pr-3">
               <TextField
                 fullWidth
-                label="Search"
+                label="Search(Name,Code,StartDate,ReleaseDate)"
                 variant="outlined"
                 InputProps={{
                   startAdornment: (

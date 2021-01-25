@@ -62,8 +62,12 @@ const Employee = () => {
   const [searchResult, setSearchResult] = useState([...employeeState]);
   useEffect(() => {
     let dataAfterFilter = searchInput
-      ? employeeState.filter((x) =>
-          x.name.toLowerCase().includes(searchInput.toLowerCase())
+      ? employeeState.filter(
+          (x) =>
+            x.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+            x.code.toLowerCase().includes(searchInput.toLowerCase()) ||
+            x.startDate.toLowerCase().includes(searchInput.toLowerCase()) ||
+            x.releaseDate.toLowerCase().includes(searchInput.toLowerCase())
         )
       : employeeState;
     for (let i = 0; i < dataAfterFilter.length; i++) {
@@ -176,7 +180,7 @@ const Employee = () => {
             <Toolbar className="mt-1 pr-3">
               <TextField
                 fullWidth
-                label="Search"
+                label="Search(Name,Code,StartDate,ReleaseDate)"
                 variant="outlined"
                 InputProps={{
                   startAdornment: (

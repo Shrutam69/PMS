@@ -61,7 +61,6 @@ const ProjectForm = (props) => {
       SelectedSkillList: result,
     });
   }, []);
-  console.log('recordForEdit', recordForEdit);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -170,11 +169,6 @@ const ProjectForm = (props) => {
                         name="SelectedSkillList"
                         options={skilllist}
                         className="basic-multi-select"
-                        // className={
-                        //   errors.code && touched.code
-                        //     ? 'err-field basic-multi-select'
-                        //     : 'field basic-multi-select'
-                        // }
                         classNamePrefix="select"
                         onRemove={onRemove}
                         onChange={onSelect}

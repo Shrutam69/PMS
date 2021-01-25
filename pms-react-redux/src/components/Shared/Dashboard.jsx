@@ -86,7 +86,7 @@ const Dashboard = () => {
     );
     techWiseProjects.push(techWiseEmployeeCount);
   }
-
+  //Filtering of Employees by joining month and year
   let employeesJoined = [];
   for (let i = 1; i <= employeeState.length + 1; ++i) {
     const yearWiseEmployeeCount = employeeState.filter(
@@ -97,6 +97,7 @@ const Dashboard = () => {
     );
     employeesJoined.push(monthWiseEmployeeCount);
   }
+  //Filtering of Employees by Releasing month and year
   let employeesReleased = [];
   for (let i = 1; i <= employeeState.length + 1; ++i) {
     const yearWiseEmployeeCount = employeeState.filter(
@@ -107,6 +108,7 @@ const Dashboard = () => {
     );
     employeesReleased.push(monthWiseEmployeeCount);
   }
+  //Filtering of Projects by starting month and year
   let projectsStarted = [];
   for (let i = 1; i <= projectState.length + 1; ++i) {
     const yearWiseProjectStartedCount = projectState.filter(
@@ -117,6 +119,7 @@ const Dashboard = () => {
     );
     projectsStarted.push(monthWiseProjectStartedCount);
   }
+  //Filtering of Projects by ending month and year
   let projectEnded = [];
   for (let i = 1; i <= employeeState.length + 1; ++i) {
     const yearWiseProjectEndedCount = projectState.filter(
@@ -179,6 +182,7 @@ const Dashboard = () => {
     };
   });
 
+  //dataSets For SkillWiseEmployeeChart
   const dataSetsForSkillWiseEmployeeChart = {
     labels: skilllist,
     datasets: [
@@ -192,7 +196,7 @@ const Dashboard = () => {
       },
     ],
   };
-
+  // dataSets For TechWise ProjectChart
   const dataSetsForTechWiseProjectChart = {
     labels: skilllist,
     datasets: [
@@ -206,7 +210,7 @@ const Dashboard = () => {
       },
     ],
   };
-
+  // dataSets For MonthWise EmployeeChart
   const dataSetsForMonthWiseEmployeeChart = {
     labels: monthList,
     datasets: [
@@ -228,7 +232,7 @@ const Dashboard = () => {
       },
     ],
   };
-
+  // dataSets For MonthWise ProjectChart
   const dataSetsForMonthWiseProjectChart = {
     labels: monthList,
     datasets: [
