@@ -38,14 +38,22 @@ const EmployeeForm = (props) => {
       ? new Date(Date.parse(recordForEdit.releaseDate))
       : new Date(),
     SelectedSkillList: recordForEdit
-      ? recordForEdit.tblEmployeeSkill?.map((data) => {
-          let newId = data.skillId;
-          const record = skillsState.filter((x) => x.id == newId);
-          return {
-            value: data.skillId,
-            label: record[0]?.name,
-          };
-        })
+      ? recordForEdit.tblEmployeeSkill
+        ? recordForEdit.tblEmployeeSkill.map((data) => {
+            let newId = data.skillId;
+            const record = skillsState.filter((x) => x.id == newId);
+            return {
+              value: data.skillId,
+              label: record[0]?.name,
+            };
+          })
+        : recordForEdit.SelectedSkillList.map((data) => {
+            const record = skillsState.filter((x) => x.id == data);
+            return {
+              value: data,
+              label: record[0]?.name,
+            };
+          })
       : [],
   };
   const [values, setValues] = useState(initialFieldValues);
@@ -61,14 +69,21 @@ const EmployeeForm = (props) => {
   });
 
   useEffect(() => {
-    var result = recordForEdit?.tblEmployeeSkill?.map((data) => {
-      return data.skillId;
-    });
+    debugger;
+    var result = recordForEdit
+      ? recordForEdit.tblEmployeeSkill
+        ? recordForEdit.tblEmployeeSkill.map((data) => {
+            return data.skillId;
+          })
+        : recordForEdit.SelectedSkillList.map((data) => {
+            return data;
+          })
+      : [];
     setValues({
       ...values,
       SelectedSkillList: result,
     });
-  }, []);
+  }, [recordForEdit]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -94,6 +109,7 @@ const EmployeeForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
+    debugger;
     if (recordForEdit == null) {
       dispatch(
         actions.create(

@@ -32,14 +32,22 @@ const ProjectForm = (props) => {
       ? new Date(Date.parse(recordForEdit.endDate))
       : new Date(),
     SelectedSkillList: recordForEdit
-      ? recordForEdit.tblProjectTech?.map((data) => {
-          let newId = data.skillId;
-          const record = skillsState.filter((x) => x.id == newId);
-          return {
-            value: data.skillId,
-            label: record[0]?.name,
-          };
-        })
+      ? recordForEdit.tblProjectTech
+        ? recordForEdit.tblProjectTech?.map((data) => {
+            let newId = data.skillId;
+            const record = skillsState.filter((x) => x.id == newId);
+            return {
+              value: data.skillId,
+              label: record[0]?.name,
+            };
+          })
+        : recordForEdit.SelectedSkillList.map((data) => {
+            const record = skillsState.filter((x) => x.id == data);
+            return {
+              value: data,
+              label: record[0]?.name,
+            };
+          })
       : [],
   };
   const [values, setValues] = useState(initialFieldValues);
@@ -53,14 +61,20 @@ const ProjectForm = (props) => {
     code: Yup.string().trim().required('This field is required'),
   });
   useEffect(() => {
-    var result = recordForEdit?.tblProjectTech?.map((data) => {
-      return data.skillId;
-    });
+    var result = recordForEdit
+      ? recordForEdit.tblProjectTech
+        ? recordForEdit.tblProjectTech.map((data) => {
+            return data.skillId;
+          })
+        : recordForEdit.SelectedSkillList.map((data) => {
+            return data;
+          })
+      : [];
     setValues({
       ...values,
       SelectedSkillList: result,
     });
-  }, []);
+  }, [recordForEdit]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
