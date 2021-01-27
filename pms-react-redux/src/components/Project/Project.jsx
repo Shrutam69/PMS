@@ -14,6 +14,7 @@ import { tableHeadersProject } from '../../utils/data';
 import * as actions from '../../actions/project';
 import * as employeeActions from '../../actions/employee';
 import * as skillsactions from '../../actions/skills';
+import * as assignProjectActions from '../../actions/assignProject';
 import { UserAddOutlined } from '@ant-design/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -40,6 +41,15 @@ const Project = () => {
   });
 
   const dispatch = useDispatch();
+  const getAssignProject = () => {
+    dispatch(assignProjectActions.fetchAll());
+  };
+  useEffect(() => {
+    getAssignProject();
+  }, []);
+  const assignProjectState = useSelector(
+    (state) => state.assignProjectReducer.list
+  );
   const getEmployeeList = () => {
     dispatch(employeeActions.fetchAll());
   };
@@ -59,7 +69,7 @@ const Project = () => {
   };
   useEffect(() => {
     getProjectList();
-  }, []);
+  }, [assignProjectState]);
   const projectState = useSelector((state) => state.projectReducer.list);
 
   const [searchResult, setSearchResult] = useState([...projectState]);
@@ -223,14 +233,12 @@ const Project = () => {
         {assignEmployee ? (
           <AssignEmployeeToProject
             recordForEdit={recordForEdit}
-            openPopup={openPopup}
             setOpenPopup={setOpenPopup}
             employeeState={employeeState}
           />
         ) : (
           <ProjectForm
             recordForEdit={recordForEdit}
-            openPopup={openPopup}
             setOpenPopup={setOpenPopup}
             skillsState={skillsState}
           />

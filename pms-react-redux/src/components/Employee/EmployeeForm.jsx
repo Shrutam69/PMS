@@ -21,7 +21,6 @@ const EmployeeForm = (props) => {
     getEmployeeList,
     setRecordForEdit,
   } = props;
-
   const skilllist = skillsState.map((data, index) => {
     return { value: data.id, label: data.name };
   });
@@ -40,8 +39,7 @@ const EmployeeForm = (props) => {
     SelectedSkillList: recordForEdit
       ? recordForEdit.tblEmployeeSkill
         ? recordForEdit.tblEmployeeSkill.map((data) => {
-            let newId = data.skillId;
-            const record = skillsState.filter((x) => x.id == newId);
+            const record = skillsState.filter((x) => x.id == data.skillId);
             return {
               value: data.skillId,
               label: record[0]?.name,
@@ -56,6 +54,7 @@ const EmployeeForm = (props) => {
           })
       : [],
   };
+
   const [values, setValues] = useState(initialFieldValues);
 
   //Validation
@@ -69,7 +68,6 @@ const EmployeeForm = (props) => {
   });
 
   useEffect(() => {
-    debugger;
     var result = recordForEdit
       ? recordForEdit.tblEmployeeSkill
         ? recordForEdit.tblEmployeeSkill.map((data) => {
@@ -109,7 +107,6 @@ const EmployeeForm = (props) => {
   };
   //Submit Event
   const onSubmit = (values) => {
-    debugger;
     if (recordForEdit == null) {
       dispatch(
         actions.create(

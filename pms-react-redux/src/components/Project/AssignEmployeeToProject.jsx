@@ -19,8 +19,7 @@ const AssignEmployeeToProject = (props) => {
     projectId: recordForEdit ? recordForEdit.id : 0,
     SelectedEmployeeList: recordForEdit
       ? recordForEdit.tblAssignProject.map((data) => {
-          let newId = data.employeeId;
-          const record = employeeState.filter((x) => x.id == newId);
+          const record = employeeState.filter((x) => x.id == data.employeeId);
           return {
             value: data.employeeId,
             label: record[0]?.name,
@@ -29,6 +28,21 @@ const AssignEmployeeToProject = (props) => {
       : [],
   };
   const [values, setValues] = useState(initialFieldValues);
+  useEffect(() => {
+    var result = recordForEdit
+      ? recordForEdit.tblAssignProject
+        ? recordForEdit.tblAssignProject.map((data) => {
+            return data.employeeId;
+          })
+        : recordForEdit.SelectedEmployeeList.map((data) => {
+            return data;
+          })
+      : [];
+    setValues({
+      ...values,
+      SelectedEmployeeList: result,
+    });
+  }, [recordForEdit]);
   useEffect(() => {
     let dataAfterFilter = searchInput
       ? employeeState.filter((x) =>

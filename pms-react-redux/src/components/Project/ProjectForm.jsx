@@ -34,8 +34,7 @@ const ProjectForm = (props) => {
     SelectedSkillList: recordForEdit
       ? recordForEdit.tblProjectTech
         ? recordForEdit.tblProjectTech?.map((data) => {
-            let newId = data.skillId;
-            const record = skillsState.filter((x) => x.id == newId);
+            const record = skillsState.filter((x) => x.id == data.skillId);
             return {
               value: data.skillId,
               label: record[0]?.name,
