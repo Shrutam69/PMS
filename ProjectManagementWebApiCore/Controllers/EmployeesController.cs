@@ -132,7 +132,7 @@ namespace ProjectManagementWebApiCore.Controllers
 
         [HttpPost]
         public async Task<ActionResult<ManageEmployee>> PostEmployee(ManageEmployee manageEmployee)
-        {
+            {
             var initialId = 0;
             TblEmployee tblEmployee = new TblEmployee()
             {
