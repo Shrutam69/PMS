@@ -13,6 +13,7 @@ import {
 import { tableHeaders } from '../../utils/data';
 import * as actions from '../../actions/employee';
 import * as projectActions from '../../actions/project';
+import * as assignProjectActions from '../../actions/assignProject';
 import { UserAddOutlined } from '@ant-design/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -38,7 +39,15 @@ const Employee = () => {
     title: '',
     subTitle: '',
   });
-
+  const getAssignProject = () => {
+    dispatch(assignProjectActions.fetchAll());
+  };
+  useEffect(() => {
+    getAssignProject();
+  }, []);
+  const assignProjectState = useSelector(
+    (state) => state.assignProjectReducer.list
+  );
   const getProjectList = () => {
     dispatch(projectActions.fetchAll());
   };
@@ -58,7 +67,7 @@ const Employee = () => {
   };
   useEffect(() => {
     getEmployeeList();
-  }, []);
+  }, [assignProjectState]);
   const employeeState = useSelector((state) => state.employeeReducer.list);
   const [searchResult, setSearchResult] = useState([...employeeState]);
   useEffect(() => {
@@ -221,7 +230,6 @@ const Employee = () => {
             <AssignProjectToEmployee
               recordForEdit={recordForEdit}
               setOpenPopup={setOpenPopup}
-              skillsState={skillsState}
               projectState={projectState}
             />
           </div>

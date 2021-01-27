@@ -10,18 +10,16 @@ import Select from 'react-select';
 import { Form, Formik } from 'formik';
 
 const AssignProjectToEmployee = (props) => {
-  const { recordForEdit, setOpenPopup, projectState, skillState } = props;
+  const { recordForEdit, setOpenPopup, projectState } = props;
   const { addToast } = useToasts();
   const dispatch = useDispatch();
-
   const [searchResult, setSearchResult] = useState([...projectState]);
   const [searchInput, setSearchInput] = useState('');
   const initialFieldValues = {
     employeeId: recordForEdit ? recordForEdit.id : 0,
     SelectedProjectList: recordForEdit
-      ? recordForEdit.tblAssignProject.map((data) => {
-          let newId = data.projectId;
-          const record = projectState.filter((x) => x.id == newId);
+      ? recordForEdit.tblAssignProject?.map((data) => {
+          const record = projectState.filter((x) => x.id == data.projectId);
           return {
             value: data.projectId,
             label: record[0]?.name,
@@ -30,6 +28,21 @@ const AssignProjectToEmployee = (props) => {
       : [],
   };
   const [values, setValues] = useState(initialFieldValues);
+  useEffect(() => {
+    var result = recordForEdit
+      ? recordForEdit.tblAssignProject
+        ? recordForEdit.tblAssignProject.map((data) => {
+            return data.projectId;
+          })
+        : recordForEdit.SelectedProjectList.map((data) => {
+            return data;
+          })
+      : [];
+    setValues({
+      ...values,
+      SelectedProjectList: result,
+    });
+  }, [recordForEdit]);
   useEffect(() => {
     let dataAfterFilter = searchInput
       ? projectState.filter((x) =>
