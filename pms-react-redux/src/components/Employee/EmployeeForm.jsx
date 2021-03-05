@@ -83,7 +83,6 @@ const EmployeeForm = (props) => {
     });
   }, [recordForEdit]);
   
-  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
