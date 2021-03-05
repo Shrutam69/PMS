@@ -82,6 +82,7 @@ const EmployeeForm = (props) => {
       SelectedSkillList: result,
     });
   }, [recordForEdit]);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
