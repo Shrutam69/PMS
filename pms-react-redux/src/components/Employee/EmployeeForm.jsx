@@ -68,6 +68,7 @@ const EmployeeForm = (props) => {
   });
   
   //test - 8
+  //test - 7
   useEffect(() => {
     var result = recordForEdit
       ? recordForEdit.tblEmployeeSkill
