@@ -67,6 +67,7 @@ const EmployeeForm = (props) => {
     code: Yup.string().trim().required('This field is required'),
   });
   
+  //test - 8
   useEffect(() => {
     var result = recordForEdit
       ? recordForEdit.tblEmployeeSkill
